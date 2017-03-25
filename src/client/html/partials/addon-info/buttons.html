@@ -1,0 +1,15 @@
+<div class="text-button-wrapper" ng-if="getAddonStatus(key) === 'NOT_INSTALLED'">
+    <div class="download text-button" data-repo-index="{{i}}" ng-click="!isOpsLocked && onDlBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
+        Install
+    </div>
+</div>
+<div class="text-button-wrapper" ng-if="getAddonStatus(key) === 'UPDATABLE'">
+    <div class="update text-button" data-repo-index="{{i}}" ng-click="!isOpsLocked && onUpBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
+        Update
+    </div>
+</div>
+<div class="text-button-wrapper" ng-if="getAddonStatus(key) === 'INSTALLED' || getAddonStatus(key) === 'UPDATABLE'">
+    <div class="remove text-button" data-repo-index="{{i}}" ng-click="!isOpsLocked && onRmBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
+        Remove
+    </div>
+</div>

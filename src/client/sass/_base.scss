@@ -1,0 +1,15 @@
+@import "lib/_variables.scss";
+
+html {
+    font-size: 12px;
+    height: 100%;
+    margin: 0rem;
+}
+
+body {
+    @include box-sizing(border-box);
+    margin: 0rem;
+    background-color: $body-bgcolor;
+    height: 100%;
+    overflow: auto;
+}

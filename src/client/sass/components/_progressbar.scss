@@ -1,0 +1,13 @@
+.progressbar {
+    width: 80%;
+    height: 0.3rem;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid $progressbar-color;
+    background-color: $progressbar-color;
+    .progressbar-complete {
+        width: 0%;
+        height: 0.3rem;
+        background-color: $progressbar-complete-color;
+    }
+}

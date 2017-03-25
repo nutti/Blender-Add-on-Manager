@@ -1,0 +1,16 @@
+.frame {
+    @include box-sizing(border-box);
+    @include scrollbar();
+    height: 100%;
+    overflow: auto;
+}
+
+.frame-spacer {
+    height: 1000rem;
+}
+
+.app-body {
+    font-family: "Default";
+    font-size: 1rem;
+    color: $body-color;
+}

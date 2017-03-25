@@ -1,0 +1,23 @@
+.selectbox-wrapper {
+    width: 100%;
+    max-width: 100%;
+    .selectbox {
+        display: block;
+        color: $body-color;
+        background-color: $selectbox-bgcolor;
+        width: 80%;
+        border: 1px solid #000000;
+        padding: 0.5rem;
+        margin: 3px;
+        margin-left: auto;
+        margin-right: auto;
+        @include appearance(none);
+        @include border-radius(3px);
+        &:focus {
+            outline: 0;
+        }
+        &:hover {
+            background-color: $selectbox-hover-bgcolor;
+        }
+    }
+}

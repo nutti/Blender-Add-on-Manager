@@ -1,0 +1,79 @@
+.app-body {
+    .container {
+        background-color: $container-bgcolor;
+        width: 100% - $menu-width;
+        max-width: 100% - $menu-width;
+        padding-top: $header-height;
+        padding-bottom: $footer-height;
+        .addon-info {
+            @include box-sizing(border-box);
+            padding: 1rem;
+            .addon-item {
+                @include border-radius(5px);
+                @include box-sizing(border-box);
+                width: 70%;
+                max-width: 70%;
+                border: 0.1rem solid #000000;
+                background-color: $addonitem-bgcolor;
+                padding: 1rem;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+                .name {
+                    font-size: 1.7rem;
+                    font-weight: bold;
+                    margin-top: 0.5rem;
+                    margin-bottom: 0.5rem;
+                }
+                .description {
+                    font-size: 1.2rem;
+                    color: $body-color - #101010;
+                    margin-top: 1.0rem;
+                    margin-bottom: 1.0rem;
+                }
+                .author {
+                    color: $body-color - #404040;
+                    font-size: 1.0rem;
+                    margin-top: 1.5rem;
+                    margin-bottom: 1.5rem;
+                }
+                .version {
+                    position: relative;
+                    top: -10.0rem;
+                    text-align: right;
+                    img {
+                        position: relative;
+                        width: 1rem;
+                        top: 0.13rem;
+                        right: 0.1rem;
+                    }
+                }
+                .bl-version {
+                    position: relative;
+                    top: -10.0rem;
+                    text-align: right;
+                    img {
+                        position: relative;
+                        width: 1.2rem;
+                        top: 0.25rem;
+                        right: 0rem;
+                    }
+                }
+                .category {
+                    position: relative;
+                    top: -10.0rem;
+                    margin-bottom: -7.0rem;
+                    text-align: right;
+                    img {
+                        position: relative;
+                        width: 1rem;
+                        top: 0.2rem;
+                        right: 0rem;
+                    }
+                }
+
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+.searchbar-wrapper {
+    width: 100%;
+    .searchbar {
+        @include border-radius(7px);
+        background-color: #303030;
+        border: solid 2px #404040;
+        width: 80%;
+        height: 2.8rem;
+        color: $body-color - #404040;
+        font-size: 1.8rem;
+        padding: 0.1rem;
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+        margin-top: ($header-height - 2.8rem - 0.6rem) / 2;
+        &:focus {
+            @include border-radius(7px);
+            outline: 0;
+            border: solid 2px #8ec6ff;
+            color: $body-color;
+            background-color: #252525;
+        }
+    }
+}

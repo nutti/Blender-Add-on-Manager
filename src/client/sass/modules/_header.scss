@@ -1,0 +1,59 @@
+@import "../lib/_variables.scss";
+
+
+.app-body {
+    .header {
+        position: fixed;
+        top: 0rem;
+        left: 0rem;
+        width: 100%;
+        height: $header-height;
+        background-color: $header-bgcolor;
+        z-index: 100;
+        .header-contents {
+            width: 100%;
+            height: 100%;
+            .search-panel {
+                float: left;
+                width: 100% - $menu-width;
+                max-width: 100% - $menu-width;
+                height: 100%;
+                display: inline-block;
+                text-align: center;
+            }
+            .control-panel {
+                float: left;
+                width: $menu-width;
+                max-width: $menu-width;
+                height: 100%;
+                display: inline-block;
+                text-align: center;
+                .menu-button-wrapper {
+                    display: inline-block;;
+                    max-width: 35.0rem;
+                    margin-left: 0.5rem;
+                    margin-right: 0.5rem;
+                    .menu-button {
+                        cursor: pointer;
+                        margin-left: auto;
+                        margin-right: auto;
+                        text-align: center;
+                        margin-top: 1.4rem;
+                        img {
+                            width: 2rem;
+                        }
+                    }
+                    .locked {
+                        color: $body-color - #202020;
+                        background-color: $button-bgcolor - #202020;
+                        &:hover {
+                            cursor: wait;
+                            color: $body-color - #202020;
+                            background-color: $button-bgcolor - #202020;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

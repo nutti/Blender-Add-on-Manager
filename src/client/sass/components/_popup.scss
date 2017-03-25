@@ -1,0 +1,15 @@
+.app-body {
+    .error-popup {
+        display: none;
+        width: $popup-width;
+        height: $popup-height;
+        margin-left: - $popup-width / 2;
+        margin-top: - $popup-height / 2;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        background-color: #FFFFFF;
+        overflow: hidden;
+        z-index: 100;
+    }
+}

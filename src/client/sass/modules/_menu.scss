@@ -1,0 +1,50 @@
+.app-body {
+    .menu {
+        float: left;
+        width: $menu-width;
+        max-width: $menu-width;
+        background-color: $menu-bgcolor;
+        padding-top: $header-height;
+        padding-bottom: $footer-height;
+        .menu-item-title {
+            text-align: center;
+            padding: 1.0rem;
+            font-size: 1.2rem;
+            font-color: $body-color + #202020;
+            font-weight: bold;
+        }
+        .menu-selector {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            label {
+                display: block;
+            }
+            .addon-list-selector-item {
+                cursor: pointer;
+                padding: 0.5rem;
+                list-style: none;
+                &:hover {
+                    color: $selector-hover-color;
+                    background-color: $selector-hover-bgcolor;
+                }
+            }
+            .addonListActive, .addonListActive:hover {
+                color: $selector-active-color;
+                background-color: $selector-active-bgcolor;
+            }
+            .addon-category-selector-item {
+                cursor: pointer;
+                padding: 0.5rem;
+                list-style: none;
+                &:hover {
+                    color: $selector-hover-color;
+                    background-color: $selector-hover-bgcolor;
+                }
+            }
+            .addonCategoryActive, .addonCategoryActive:hover {
+                color: $selector-active-color;
+                background-color: $selector-active-bgcolor;
+            }
+        }
+    }
+}

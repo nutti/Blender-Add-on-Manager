@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html ng-app="blAddonMgr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Blender Add-on Manager</title>
+        <script type="text/javascript">
+            try {
+                const connect = require('electron-connect');
+                if (connect) {
+                    connect.client.create();
+                }
+            }
+            catch(e) {
+                console.log(e);
+            }
+            window.jQuery = window.$ = require('../js/ext/ext-lib.js');
+        </script>
+        <link rel="stylesheet" href="../css/main.css">
+        <script type="text/javascript" src="../js/app.js"></script>
+    </head>
+    <body class="app-body">
+        <div ng-controller="MainController as main" class="frame">
+            <div class="header frame">
+                <div class="header-contents">
+                    <div ng-include="'partials/header.html'"></div>
+                </div>
+            </div>
+            <div class="menu frame">
+                <div class="menu-item-title">
+                    Version
+                </div>
+                <div class="blender-version selectbox-wrapper" ng-show="showBlVerSelect">
+                    <select class="selectbox" name="blVerSelect" ng-change="onAddonSelectorChanged()" ng-model="blVerSelect" ng-options="ver as ver for ver in blVerList">
+                    </select>
+                </div>
+                <div class="menu-item-title">
+                    Addon List
+                </div>
+                <div class="menu-selector">
+                    <li ng-repeat="list in addonLists" class="addon-list-selector-item" ng-class="{addonListActive: isAddonListActive($index)}" ng-click="onAddonListSelectorChanged($index)">
+                        {{list.name}}
+                    </li>
+                </div>
+                <div class="menu-item-title">
+                    Category
+                </div>
+                <div class="menu-selector">
+                    <li ng-repeat="category in addonCategories" class="addon-category-selector-item" ng-class="{addonCategoryActive: isAddonCategoryActive($index)}" ng-click="onAddonCategorySelectorChanged($index)">
+                        {{category.name}}
+                    </li>
+                </div>
+
+            </div>
+            <div class="container frame">
+                <div class="addon-info">
+                    <div ng-include="addonInfoTpl"></div>
+                </div>
+            </div>
+            <div class="footer frame">
+                <div class="footer-contents">
+                    <div ng-include="'partials/footer.html'"></div>
+                </div>
+            </div>
+            <div ng-include="'partials/error-popup.html'"></div>
+        </div>
+    </body>
+</html>

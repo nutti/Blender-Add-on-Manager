@@ -1,0 +1,30 @@
+$menu-width: 20%;
+
+$body-color: #B0B0B0;
+$body-bgcolor: #1a1b1a;
+$menu-bgcolor: #222222;
+$header-bgcolor: #101010;
+$footer-bgcolor: $header-bgcolor;
+$container-bgcolor: $body-bgcolor;
+
+$addonitem-bgcolor: $container-bgcolor + #101010;
+
+$selector-active-color: #F0F0F0;
+$selector-active-bgcolor: #585858;
+$selector-hover-color: #E0E0E0;
+$selector-hover-bgcolor: #393939;
+
+$button-bgcolor: #404040;
+$button-hover-bgcolor: #606060;
+
+$selectbox-bgcolor: $button-bgcolor;
+$selectbox-hover-bgcolor: $button-hover-bgcolor;
+
+$header-height: 5.0rem;
+$footer-height: 3.0rem;
+
+$progressbar-color: #333366;
+$progressbar-complete-color: $progressbar-color + #777799;
+
+$popup-width: 600px;
+$popup-height: 300px;

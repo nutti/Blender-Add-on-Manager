@@ -1,0 +1,17 @@
+<div class="control-panel">
+    <div class="menu-button-wrapper">
+        <div class="menu-button" id="update-installed-addon-db" ng-click="!isOpsLocked && onInstDBBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
+            <img src="../images/update_installed_addon.png" onmouseover="this.src='../images/update_installed_addon_hover.png'" onmouseout="this.src='../images/update_installed_addon.png'" alt="Update Installed Add-on DB" />
+        </div>
+    </div>
+    <div class="menu-button-wrapper">
+        <div class="menu-button" id="update-github-addon-db" ng-click="!isOpsLocked && onGitHubDBBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
+            <img src="../images/update_github_addon.png" onmouseover="this.src='../images/update_github_addon_hover.png'" onmouseout="this.src='../images/update_github_addon.png'" alt="Update GitHub Add-on DB" />
+        </div>
+    </div>
+</div>
+<div class="search-panel">
+    <div class="searchbar-wrapper">
+        <input type="text" name="search-bar" class="searchbar" ng-keyup="onSearchBarUpdated($event)">
+    </div>
+</div>

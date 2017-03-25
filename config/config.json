@@ -1,0 +1,13 @@
+{
+    "db": {
+        "server": "colorful-pico.net",
+        "port": "5000",
+        "api": "/api/bl-addon-db",
+        "endpoint": {
+            "addon-list": "/addon-list",
+            "addon-total": "/addon-total",
+            "version": "/version",
+            "services": "/services"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+<div class="menu-item-title">
+    Version
+</div>
+<div class="blender-version selectbox-wrapper" ng-show="showBlVerSelect">
+    <select class="selectbox" name="blVerSelect" ng-change="onAddonSelectorChanged()" ng-model="blVerSelect" ng-options="ver as ver for ver in blVerList">
+    </select>
+</div>
+<div class="menu-item-title">
+    Addon List
+</div>
+<div class="menu-selector">
+    <li ng-repeat="list in addonLists" class="addon-list-selector-item" ng-class="{addonListActive: isAddonListActive($index)}" ng-click="onAddonListSelectorChanged($index)">
+        {{list.name}}
+    </li>
+</div>
+<div class="menu-item-title">
+    Category
+</div>
+<div class="menu-selector">
+    <li ng-repeat="category in addonCategories" class="addon-category-selector-item" ng-class="{addonCategoryActive: isAddonCategoryActive($index)}" ng-click="onAddonCategorySelectorChanged($index)">
+        {{category.name}}
+    </li>
+</div>
