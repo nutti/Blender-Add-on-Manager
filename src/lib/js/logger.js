@@ -4,10 +4,15 @@ import path from 'path';
 import log4js from 'log4js';
 import log4jsExt from 'log4js-extend';
 
+import * as Utils from 'utils';
+
+const MAX_LOG_SIZE = 3 * 1024 * 1024;       // 3MiB
+const MAX_BACKUPS = 3;
 
 export default class Logger
 {
     constructor () {
+        let cwd = Utils.getCwd();
         let config = {
           "log4js": {
             "level": "ALL",
@@ -16,14 +21,18 @@ export default class Logger
                 {
                   "category": "lib",
                   "type": "file",
-                  "filename": "logs/lib.log"
+                  "backups": MAX_BACKUPS,
+                  "maxLogSize": MAX_LOG_SIZE,
+                  "filename": cwd + "/logs/lib.log"
                 },
                 {
                   "category": "app",
                   "type": "file",
-                  "filename": "logs/app.log"
+                  "backups": MAX_BACKUPS,
+                  "maxLogSize": MAX_LOG_SIZE,
+                  "filename": cwd + "/logs/app.log"
                 }
-              ]
+             ]
             }
           }
         };

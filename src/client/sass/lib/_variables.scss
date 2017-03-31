@@ -15,7 +15,7 @@ $selector-hover-color: #E0E0E0;
 $selector-hover-bgcolor: #393939;
 
 $button-bgcolor: #404040;
-$button-hover-bgcolor: #606060;
+$button-hover-bgcolor: $button-bgcolor - #101010;
 
 $selectbox-bgcolor: $button-bgcolor;
 $selectbox-hover-bgcolor: $button-hover-bgcolor;

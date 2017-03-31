@@ -107,7 +107,7 @@ export function filterAddons(addons, source, status, blVer, category, regex) {
         let categoryMatched = (category.indexOf('All') != -1) || (category.indexOf(elm['bl_info']['category']) != -1);
 
         // filtered by search string
-        let regexp = new RegExp(regex);
+        let regexp = new RegExp(regex, "i");
         let nameMatched = (elm['bl_info']['name'] != undefined && elm['bl_info']['name'].match(regexp) != null);
         let authorMatched = (elm['bl_info']['author'] != undefined && elm['bl_info']['author'].match(regexp) != null);
         let descMatched = (elm['bl_info']['description'] != undefined && elm['bl_info']['description'].match(regexp) != null);
