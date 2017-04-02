@@ -11,7 +11,7 @@ import DBWriter from 'db_writer';
 const dbWriter = new DBWriter();
 dbWriter.init();
 
-const CONFIG_FILE = path.resolve('./config.json');
+const CONFIG_FILE = process.cwd() + '/config.json';
 
 let minPage = 1;
 let maxPage = 100;
@@ -104,4 +104,3 @@ console.log("Parsed configuration file ...");
 builder.init(config, minPage, minPage, minFileSize, minFileSize);
 
 execCmd(minFileSize, minPage);
-

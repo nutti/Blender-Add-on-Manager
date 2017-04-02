@@ -1,3 +1,8 @@
+<div class="text-button-wrapper">
+    <div class="link text-button" data-repo-index="{{i}}" ng-click="onLnBtnClicked($event); $event.stopPropagation();">
+        Link
+    </div>
+</div>
 <div class="text-button-wrapper" ng-if="getAddonStatus(key) === 'NOT_INSTALLED'">
     <div class="download text-button" data-repo-index="{{i}}" ng-click="!isOpsLocked && onDlBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
         Install

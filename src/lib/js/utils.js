@@ -1,14 +1,33 @@
 'use strict';
 
+import os from 'os';
 import fs from 'fs';
+import path from 'path';
 import request from 'request';
 import unzip from 'unzip';
 
 import PyDictParser from 'pydict_parser';
 const pyDictParser = new PyDictParser();
-import Logger from 'logger';
-const logger = new Logger();
+//import Logger from 'logger';
+//const logger = new Logger();
 
+export function getCwd() {
+    let type = os.type().toString();
+    let cwd = null;
+
+    switch (type) {
+        case 'Windows_NT':
+        case 'Linux':
+            cwd = process.cwd();
+            break;
+        case 'Darwin':
+            cwd = path.dirname(require.main.filename);
+            cwd = cwd.slice(0, cwd.lastIndexOf('/Blender_Add-on_Manager.app/Contents/Resources') + 1);
+            break;
+    }
+
+    return cwd;
+}
 
 export function isExistFile(file) {
     try {
@@ -48,15 +67,19 @@ export function parseBlInfo(srcBody) {
         parsed = pyDictParser.parse(srcBody);
     }
     catch (e) {
+        /*
         logger.category('lib').warn("==========Parse Error=========");
         logger.category('lib').warn("---srcBody---");
         logger.category('lib').warn(srcBody);
         logger.category('lib').warn("---Exception---");
         logger.category('lib').warn(e);
+        */
         return null;
     }
     if (parsed == null) {
+        /*
         logger.category('lib').warn("Failed to parse source.");
+        */
         return null;
     }
 
@@ -142,7 +165,6 @@ export function downloadFile(config, url, saveTo) {
             });
         }
         else {
-            logger.category('lib').info("Not use proxy server");
             r = request({
                 url: url,
                 json: true
@@ -168,7 +190,6 @@ export function extractZipFile(from_, to, deleteOriginal) {
         let stream = fs.createReadStream(from_).pipe(unzip.Extract({path: to}));
         stream.on('close', () => {
             if (deleteOriginal) {
-                logger.category('lib').info("Deleting original file ...");
                 fs.unlinkSync(from_);
             }
             resolve();
@@ -194,7 +215,6 @@ export function getRemoteFileSize(config, url) {
             });
         }
         else {
-            logger.category('lib').info("Not use proxy server");
             r = request({
                 url: url,
                 json: true

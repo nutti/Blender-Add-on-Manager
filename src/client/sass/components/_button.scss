@@ -18,6 +18,30 @@
             background-color: $button-hover-bgcolor;
         }
     }
+    .remove {
+        color: $body-color + #442020;
+        background-color: $button-bgcolor + #440000;
+        &:hover {
+            color: $body-color + #300000;
+            background-color: $button-hover-bgcolor + #300000;
+        }
+    }
+    .update {
+        color: $body-color + #202044;
+        background-color: $button-bgcolor + #000044;
+        &:hover {
+            color: $body-color + #000030;
+            background-color: $button-hover-bgcolor + #000030;
+        }
+    }
+    .download {
+        color: $body-color + #103310;
+        background-color: $button-hover-bgcolor + #002500;
+        &:hover {
+            color: $body-color + #101810;
+            background-color: $button-hover-bgcolor + #001500;
+        }
+    }
     .locked {
         color: $body-color - #202020;
         background-color: $button-bgcolor - #202020;
@@ -26,13 +50,5 @@
             color: $body-color - #202020;
             background-color: $button-bgcolor - #202020;
         }
-    }
-    .remove {
-        color: $body-color + #442020;
-        background-color: $button-bgcolor + #440000;
-    }
-    .update {
-        color: $body-color + #202044;
-        background-color: $button-bgcolor + #000044;
     }
 }

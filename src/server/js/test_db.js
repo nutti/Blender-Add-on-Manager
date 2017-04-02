@@ -9,7 +9,7 @@ const writer = new DBWriter();
 import fs from 'fs';
 import path from 'path';
 
-const CONFIG_FILE = path.resolve('./config.json');
+const CONFIG_FILE = process.cwd() + '/config.json';
 
 let text = fs.readFileSync(CONFIG_FILE, 'utf8');
 console.log("Parsing configuration file ...");
