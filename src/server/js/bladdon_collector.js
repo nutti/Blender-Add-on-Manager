@@ -4,10 +4,9 @@
 import fs from 'fs';
 import path from 'path';
 
-
-import BlAddonDB from 'bl_add-on_db';
-const builder = new BlAddonDB();
-import DBWriter from 'db_writer';
+import BlamDB from 'blam-db';
+const blamDB = new BlamDB();
+import DBWriter from 'blam-db-writer';
 const dbWriter = new DBWriter();
 dbWriter.init();
 
@@ -58,10 +57,10 @@ function getDate() {
 
 function collectBlAddon(startPage, endPage, startFileSize, endFileSize) {
     try {
-        builder.setPages(startPage, endPage);
-        builder.setFileSizes(startFileSize, endFileSize);
-        builder.buildAddonDB( () => {
-            builder.writeDB(dbWriter);
+        blamDB.setPages(startPage, endPage);
+        blamDB.setFileSizes(startFileSize, endFileSize);
+        blamDB.buildAddonDB( () => {
+            blamDB.writeDB(dbWriter);
         });
     }
     catch (e) {
@@ -101,6 +100,6 @@ console.log("Parsing configuration file ...");
 config = JSON.parse(text);
 console.log("Parsed configuration file ...");
 
-builder.init(config, minPage, minPage, minFileSize, minFileSize);
+blamDB.init(config, minPage, minPage, minFileSize, minFileSize);
 
 execCmd(minFileSize, minPage);

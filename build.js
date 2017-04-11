@@ -1,6 +1,4 @@
 const packager = require('electron-packager');
-const fs = require('fs');
-const fsext = require('fs-extra');
 const package = require('./package.json');
 
 packager({
@@ -28,7 +26,5 @@ packager({
     for (var i = 0; i < appPaths.length; ++i) {
         var path = appPaths[i];
         console.log("Build is done. (path=" + path + ")");
-        fs.mkdirSync(path + '/config');
-        fsext.copySync('./config/config.json', path + '/config/config.json');
     }
 });

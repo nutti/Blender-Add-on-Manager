@@ -5,11 +5,8 @@ import fs from 'fs';
 import path from 'path';
 import request from 'request';
 import unzip from 'unzip';
+import electron from 'electron';
 
-import PyDictParser from 'pydict_parser';
-const pyDictParser = new PyDictParser();
-//import Logger from 'logger';
-//const logger = new Logger();
 
 export function getCwd() {
     let type = os.type().toString();
@@ -21,8 +18,7 @@ export function getCwd() {
             cwd = process.cwd();
             break;
         case 'Darwin':
-            cwd = path.dirname(require.main.filename);
-            cwd = cwd.slice(0, cwd.lastIndexOf('/Blender_Add-on_Manager.app/Contents/Resources') + 1);
+            cwd = electron.remote.app.getPath('userData');
             break;
     }
 
@@ -54,44 +50,6 @@ export function is(type, obj) {
 }
 
 
-export function extractBlInfoBody(srcBody) {
-    let result = srcBody.match(/\n*(bl_info\s*=\s*)([\s\S]*)$/);
-    if (!result || !result[2]) { return null; }
-    return result[2];
-}
-
-export function parseBlInfo(srcBody) {
-    let parsed = null;
-
-    try {
-        parsed = pyDictParser.parse(srcBody);
-    }
-    catch (e) {
-        /*
-        logger.category('lib').warn("==========Parse Error=========");
-        logger.category('lib').warn("---srcBody---");
-        logger.category('lib').warn(srcBody);
-        logger.category('lib').warn("---Exception---");
-        logger.category('lib').warn(e);
-        */
-        return null;
-    }
-    if (parsed == null) {
-        /*
-        logger.category('lib').warn("Failed to parse source.");
-        */
-        return null;
-    }
-
-    if (parsed['version']) {
-       parsed['version'] = parsed['version'].join('.');
-    }
-    if (parsed['blender']) {
-       parsed['blender'] = parsed['blender'].join('.');
-    }
-
-    return parsed;
-}
 
 export function isProxyConfigValid(config) {
     if (!config) { return false; }
@@ -195,10 +153,6 @@ export function extractZipFile(from_, to, deleteOriginal) {
             resolve();
         });
     });
-}
-
-export function genBlAddonKey(name, author) {
-    return name + '@' + author;
 }
 
 export function getRemoteFileSize(config, url) {

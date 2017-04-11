@@ -8,13 +8,13 @@ import request from 'request';
 
 // own modules
 import * as Utils from 'utils';
-import * as BlAddon from 'bl-addon';
+import * as Blam from 'blam';
 import Logger from 'logger';
 const logger = new Logger();
 
-const GITHUB_URL = 'https://github.com';
+import {GITHUB_URL} from 'blam-constants';
 
-export default class BlAddonDB
+export default class BlamDB
 {
     constructor() {
         this['config'] = null;
@@ -156,13 +156,13 @@ export default class BlAddonDB
     _parseMainSrc(srcBody) {
         if (!srcBody) { return null; }
 
-        var blInfoBody = Utils.extractBlInfoBody(srcBody);
+        var blInfoBody = Blam.extractBlInfoBody(srcBody);
         if (!blInfoBody) { return null; }
 
-        var info = Utils.parseBlInfo(blInfoBody);
+        var info = Blam.parseBlInfo(blInfoBody);
         if (!info) { return null; }
 
-        return BlAddon.validateBlInfo(info);
+        return Blam.validateBlInfo(info);
     }
 
     async buildAddonDB(cb) {
@@ -261,7 +261,7 @@ export default class BlAddonDB
         repoInfoList.forEach( (elm) => {
             let name = elm['bl_info']['name'];
             let author = elm['bl_info']['author'];
-            let key = Utils.genBlAddonKey(name, author);
+            let key = Blam.genBlAddonKey(name, author);
             elm['key'] = key
         });
 
@@ -282,7 +282,7 @@ export default class BlAddonDB
             for (let i = 1; i < elms.length; ++i) {
                 let ver1 = newest['bl_info']['version'];
                 let ver2 = elms[i]['bl_info']['version'];
-                if (BlAddon.compareAddonVersion(ver1, ver2) == -1) { // ver1 < ver2
+                if (Blam.compareAddonVersion(ver1, ver2) == -1) { // ver1 < ver2
                     newest = elms[i];
                 }
             }
@@ -299,7 +299,7 @@ export default class BlAddonDB
                 if (result) {
                     let ver1 = result['bl_info']['version'];
                     let ver2 = elm['bl_info']['version'];
-                    if (BlAddon.compareAddonVersion(ver1, ver2) >= 0) {    // ver1 >= ver2
+                    if (Blam.compareAddonVersion(ver1, ver2) >= 0) {    // ver1 >= ver2
                         logger.category('lib').info("No need to updated (key=" + elm['key'] + ")");
                         continue;
                     }

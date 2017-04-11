@@ -3,10 +3,7 @@
 import MongoDB from 'mongodb';
 const mongodb = MongoDB.MongoClient;
 
-const DB_NAME = 'blAddonMgr';
-const COLLECTION_NAME = 'blAddonGitHub';
-const DB_HOSTNAME = 'localhost';
-const DB_PORT = 27017;
+import {DB_NAME, COLLECTION_NAME, DB_HOSTNAME, DB_PORT} from 'blam-constants';
 
 export default class DBWriter
 {

@@ -1,6 +1,6 @@
 {
   "name": "Blender_Add-on_Manager",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Blender Add-on Manager",
   "main": "main.js",
   "scripts": {
