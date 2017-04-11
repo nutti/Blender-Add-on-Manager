@@ -1,8 +1,13 @@
 'use strict';
 
 import * as Utils from 'utils';
+import Logger from 'logger';
+const logger = new Logger();
+import PyDictParser from 'pydict-parser';
+const pyDictParser = new PyDictParser();
 
-const BL_INFO_UNDEF = "626c5f696e666f5f@UNDEF";
+import {BL_INFO_UNDEF} from 'blam-constants';
+
 
 // if there is undefined entry, fake data is used
 export function validateBlInfo(info) {
@@ -21,7 +26,6 @@ export function validateBlInfo(info) {
 
     return out;
 }
-
 
 export function compareAddonVersion(v1, v2) {
     if (v1 === BL_INFO_UNDEF) {
@@ -119,6 +123,35 @@ export function filterAddons(addons, source, status, blVer, category, regex) {
     return keys;
 }
 
+function _compareAddonsByName(a, b, list, order)
+{
+    if (a[list]['bl_info']['name'].toString() > b[list]['bl_info']['name'].toString()) {
+        return order == 'ASCEND' ? 1 : -1;
+    }
+    else {
+        return order == 'ASCEND' ? 1 : -1;
+    }
+}
+
+function _compareAddons(a, b, list, item, order)
+{
+    switch (item) {
+        case 'NAME':
+            return _compareAddonsByName(a, b, list, order);
+            break;
+    }
+
+    return 0;
+}
+
+export function sortAddons(addons, keys, list, item, order)
+{
+    keys.sort( (a, b) => {
+        return _compareAddons(addons[a], addons[b], list, item, order);
+    });
+
+    return keys;
+}
 
 export function updateAddonStatus(github, installed, blVers)
 {
@@ -168,8 +201,8 @@ export function updateAddonStatus(github, installed, blVers)
                 }
                 // newest version is registered
                 else {
-                    let ver1 = addonStatus[installedKey]['installed'][blVer]['bl_info']['version'].split('.');
-                    let ver2 = installed[blVer][i]['bl_info']['version'].split('.');
+                    let ver1 = addonStatus[installedKey]['installed'][blVer]['bl_info']['version'];
+                    let ver2 = installed[blVer][i]['bl_info']['version'];
                     if (compareAddonVersion(ver1, ver2) == -1) {    // ver1 < ver2
                         addonStatus[installedKey]['installed'][blVer] = installed[blVer][i];
                     }
@@ -214,4 +247,44 @@ export function updateAddonStatus(github, installed, blVers)
     }
 
     return addonStatus;
+}
+
+export function genBlAddonKey(name, author) {
+    return name + '@' + author;
+}
+
+
+export function extractBlInfoBody(srcBody) {
+    let result = srcBody.match(/\n*(bl_info\s*=\s*)([\s\S]*)$/);
+    if (!result || !result[2]) { return null; }
+    return result[2];
+}
+
+export function parseBlInfo(srcBody) {
+    let parsed = null;
+
+    try {
+        parsed = pyDictParser.parse(srcBody);
+    }
+    catch (e) {
+        logger.category('lib').warn("==========Parse Error=========");
+        logger.category('lib').warn("---srcBody---");
+        logger.category('lib').warn(srcBody);
+        logger.category('lib').warn("---Exception---");
+        logger.category('lib').warn(e);
+        return null;
+    }
+    if (parsed == null) {
+        logger.category('lib').warn("Failed to parse source.");
+        return null;
+    }
+
+    if (parsed['version']) {
+       parsed['version'] = parsed['version'].join('.');
+    }
+    if (parsed['blender']) {
+       parsed['blender'] = parsed['blender'].join('.');
+    }
+
+    return parsed;
 }

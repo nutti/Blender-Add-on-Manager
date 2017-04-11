@@ -1,12 +1,19 @@
 <div id="error-popup" class="error-popup">
     <div class="error-popup-header">
-        <button type="button" class="close" ng-click="$dismiss()" aria-hidden="true">x</button>
-        <h3>Error!!</h3>
+        <h3>{{ errTitle }}</h3>
+        <h4>{{ errMsg }}</h4>
     </div>
     <div class="error-popup-body">
-        Error body
+        {{ errCallTrace }}
     </div>
     <div class="error-popup-footer">
-        <button class="btn btn-danger" ng-click="$close()">Close</button>
+        <div class="close-button-wrapper">
+            <div class="text-button-wrapper">
+                <div class="remove text-button" ng-click="closeErrorPopup();">
+                    Close
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<div id="error-popup-background" class="error-popup-background"></div>

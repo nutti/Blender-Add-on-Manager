@@ -10,7 +10,7 @@ app = Flask(__name__)
 api = Api(app)
 
 SERVICES = ['github']
-API_VERSION = "0.1.1"
+API_VERSION = "0.1.2"
 
 
 class JSONEncoder(json.JSONEncoder):

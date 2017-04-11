@@ -1,9 +1,11 @@
 *~
 *.swp
+*.pyc
+
 node_modules/
 src/js/ext/
 bower_components/
-server/venv
+venv
 images/ext
 
 

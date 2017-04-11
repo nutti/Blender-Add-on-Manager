@@ -5,12 +5,12 @@ import fs from 'fs';
 import path from 'path';
 
 import * as Utils from 'utils';
-import * as BlAddon from 'bl-addon';
+import * as Blam from 'blam';
 import Logger from 'logger';
 const logger = new Logger();
 
 
-export default class BlAddonChecker
+export default class BlamLocal
 {
     constructor() {
         this['addonList'] = {};
@@ -171,11 +171,11 @@ export default class BlAddonChecker
                 }
                 let srcBody = fs.readFileSync(mainSrcPath).toString();
                 if (!Utils.isExistFile(mainSrcPath)) { throw new Error("File '" + mainSrcPath + "' does not exist"); }
-                let blInfoBody = Utils.extractBlInfoBody(srcBody);
+                let blInfoBody = Blam.extractBlInfoBody(srcBody);
                 if (!blInfoBody) { continue; }      // ignore
-                let info = Utils.parseBlInfo(blInfoBody);
+                let info = Blam.parseBlInfo(blInfoBody);
                 if (!info) { continue; }            // ignore
-                this['addonList'][key][i]['bl_info'] = BlAddon.validateBlInfo(info);
+                this['addonList'][key][i]['bl_info'] = Blam.validateBlInfo(info);
                 this['addonList'][key][i]['main_src_path'] = mainSrcPath;
                 this['addonList'][key][i]['src_path'] = path;
 

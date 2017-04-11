@@ -1,18 +1,21 @@
 'use strict';
 
+import fs from 'fs';
 import path from 'path';
 import log4js from 'log4js';
 import log4jsExt from 'log4js-extend';
+import electron from 'electron';
 
 import * as Utils from 'utils';
 
-const MAX_LOG_SIZE = 3 * 1024 * 1024;       // 3MiB
-const MAX_BACKUPS = 3;
+import {USER_DIR, MAX_LOG_SIZE, MAX_BACKUPS, LOG_DIR} from 'blam-constants';
 
 export default class Logger
 {
     constructor () {
-        let cwd = Utils.getCwd();
+        if (!Utils.isExistFile(LOG_DIR)) {
+            fs.mkdirSync(LOG_DIR);
+        }
         let config = {
           "log4js": {
             "level": "ALL",
@@ -23,14 +26,14 @@ export default class Logger
                   "type": "file",
                   "backups": MAX_BACKUPS,
                   "maxLogSize": MAX_LOG_SIZE,
-                  "filename": cwd + "/logs/lib.log"
+                  "filename": LOG_DIR + "/lib.log"
                 },
                 {
                   "category": "app",
                   "type": "file",
                   "backups": MAX_BACKUPS,
                   "maxLogSize": MAX_LOG_SIZE,
-                  "filename": cwd + "/logs/app.log"
+                  "filename": LOG_DIR + "/app.log"
                 }
              ]
             }

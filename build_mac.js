@@ -1,6 +1,4 @@
 const packager = require('electron-packager');
-const fs = require('fs');
-const fsext = require('fs-extra');
 const package = require('./package.json');
 
 packager({
@@ -15,6 +13,7 @@ packager({
     asar: true,
     prune: true,
     ignore: "node_modules/electron-connect",
+    "sign": "Developer ID Application: COLORFUL PICO",
     "appVersion": package['version'],
     "version-string": {
         companyName: "colorful-pico.net",
@@ -28,7 +27,5 @@ packager({
     for (var i = 0; i < appPaths.length; ++i) {
         var path = appPaths[i];
         console.log("Build is done. (path=" + path + ")");
-        fs.mkdirSync(path + '/config');
-        fsext.copySync('./config/config.json', path + '/config/config.json');
     }
 });
