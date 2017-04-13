@@ -9,7 +9,7 @@ var crashReporter = electron.crashReporter;
 
 var mainWindow = null;
 
-const DEBUG = false;
+const DEBUG = true;
 
 crashReporter.start({
     productName: 'Blender Add-on Manager',

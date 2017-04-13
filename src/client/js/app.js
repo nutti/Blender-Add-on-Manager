@@ -240,6 +240,12 @@ app.controller('MainController', function ($scope, $timeout) {
     $scope.blVerSelect = $scope.blVerList[0];
     $scope.showBlVerSelect = true;
 
+    $scope.addonOrderItemList = [
+        {name: 'Add-on Name', value: 'ADDON_NAME'},
+        {name: 'Author', value: 'AUTHOR'}
+    ];
+    $scope.addonOrderItemSelect = $scope.addonOrderItemList[0];
+
     $scope.onAddonSelectorChanged = onAddonSelectorChanged;
 
     //$scope.blVerList.push('Custom');
@@ -439,6 +445,8 @@ app.controller('MainController', function ($scope, $timeout) {
         onAddonSelectorChanged();
     }
 
+    $scope.changedAddonOrder = onAddonSelectorChanged;
+
     function onAddonSelectorChanged() {
         // collect filter condition
         var activeList = $scope.addonLists[$scope.addonListActive]['value'];
@@ -479,12 +487,12 @@ app.controller('MainController', function ($scope, $timeout) {
                         blVer,
                         activeCategory,
                         searchStr);
-                    // addons = Blam.sortAddons(
-                    //     $scope.addonStatus,
-                    //     addons,
-                    //     'github',
-                    //     'NAME',
-                    //     'ASCEND');
+                    addons = Blam.sortAddons(
+                        $scope.addonStatus,
+                        addons,
+                        'github',
+                        $scope.addonOrderItemSelect.value,
+                        'ASCEND');
                 }
                 $scope.addonInfoTpl = 'partials/addon-info/github.html';
                 break;

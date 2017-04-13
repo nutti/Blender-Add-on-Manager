@@ -123,21 +123,29 @@ export function filterAddons(addons, source, status, blVer, category, regex) {
     return keys;
 }
 
-function _compareAddonsByName(a, b, list, order)
+function _compareAddonsByBlInfoItem(a, b, list, item, order)
 {
-    if (a[list]['bl_info']['name'].toString() > b[list]['bl_info']['name'].toString()) {
+    let an = a[list]['bl_info'][item];
+    let bn = b[list]['bl_info'][item]; 
+
+    if (an > bn) {
         return order == 'ASCEND' ? 1 : -1;
     }
-    else {
-        return order == 'ASCEND' ? 1 : -1;
+    else if (an < bn) {
+        return order == 'ASCEND' ? -1 : 1;
     }
+
+    return 0;
 }
 
 function _compareAddons(a, b, list, item, order)
 {
     switch (item) {
-        case 'NAME':
-            return _compareAddonsByName(a, b, list, order);
+        case 'ADDON_NAME':
+            return _compareAddonsByBlInfoItem(a, b, list, 'name', order);
+            break;
+        case 'AUTHOR':
+            return _compareAddonsByBlInfoItem(a, b, list, 'author', order);
             break;
     }
 
@@ -146,7 +154,7 @@ function _compareAddons(a, b, list, item, order)
 
 export function sortAddons(addons, keys, list, item, order)
 {
-    keys.sort( (a, b) => {
+    keys.sort( function (a, b) {
         return _compareAddons(addons[a], addons[b], list, item, order);
     });
 
