@@ -14,6 +14,7 @@
             width: 100%;
             height: 100%;
             .search-panel {
+                @include searchbar(90%);
                 float: left;
                 width: 100% - $menu-width;
                 max-width: 100% - $menu-width;
@@ -51,6 +52,27 @@
                             color: $body-color - #202020;
                             background-color: $button-bgcolor - #202020;
                         }
+                    }
+                }
+            }
+            .search-panel {
+                display: flex;
+                width: 100%;
+                .search {
+                    width: 60%;
+                }
+                .sort {
+                    display: flex;
+                    width: 40%;
+                    margin-top: 1rem;
+                    .sort-item {
+                        @include selectbox(80%);
+                        width: 70%;
+                    }
+                    .sort-order {
+                        @include radiobutton();
+                        width: 30%;
+                        text-align: left;
                     }
                 }
             }

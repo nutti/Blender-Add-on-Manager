@@ -241,6 +241,7 @@ app.controller('MainController', function ($scope, $timeout) {
     $scope.showBlVerSelect = true;
 
     $scope.addonOrderItemList = [
+        {name: 'Sort:', value: ''},
         {name: 'Add-on Name', value: 'ADDON_NAME'},
         {name: 'Author', value: 'AUTHOR'}
     ];
@@ -277,6 +278,7 @@ app.controller('MainController', function ($scope, $timeout) {
     ];
     $scope.customAddonDirList = [];
     $scope.addonListActive = 1;
+    $scope.addonOrder = 'ASCEND';
 
     // "Update GitHub DB" button
     $scope.onGitHubDBBtnClicked = function ($event) {
@@ -474,6 +476,12 @@ app.controller('MainController', function ($scope, $timeout) {
                         blVer,
                         activeCategory,
                         searchStr);
+                    addons = Blam.sortAddons(
+                        $scope.addonStatus,
+                        addons,
+                        'installed',
+                        $scope.addonOrderItemSelect.value,
+                        $scope.addonOrder);
                 }
                 $scope.addonInfoTpl = 'partials/addon-info/installed.html';
                 break;
@@ -492,7 +500,7 @@ app.controller('MainController', function ($scope, $timeout) {
                         addons,
                         'github',
                         $scope.addonOrderItemSelect.value,
-                        'ASCEND');
+                        $scope.addonOrder);
                 }
                 $scope.addonInfoTpl = 'partials/addon-info/github.html';
                 break;

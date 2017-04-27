@@ -3,3 +3,13 @@
         display: none;
     }
 }
+
+@mixin fixed-width($width) {
+    width: $width;
+    max-width: $width;
+}
+
+@mixin margin-center() {
+    margin-left: auto;
+    margin-right: auto;
+}

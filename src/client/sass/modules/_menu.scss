@@ -1,5 +1,6 @@
 .app-body {
     .menu {
+        @include selectbox(80%);
         float: left;
         width: $menu-width;
         max-width: $menu-width;

@@ -154,6 +154,8 @@ function _compareAddons(a, b, list, item, order)
 
 export function sortAddons(addons, keys, list, item, order)
 {
+    if (item == '') { return keys; }
+
     keys.sort( function (a, b) {
         return _compareAddons(addons[a], addons[b], list, item, order);
     });
