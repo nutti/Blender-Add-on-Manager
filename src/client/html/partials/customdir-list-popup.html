@@ -1,0 +1,43 @@
+<div id="customdir-list-popup" class="customdir-list-popup">
+    <div class="customdir-list-popup-header">
+        <h3>Manage Custom Installation Target</h3>
+    </div>
+    <div class="customdir-list-popup-body">
+        <h4>Custom Target List</h4>
+        <div class="ui">
+            <div class="selectbox-wrapper" ng-show="true">
+                <select class="selectbox" name="customDirListSelect" ng-model="$parent.customDirListSelect" ng-options="key for key in customDirItemList">
+                </select>
+            </div>
+            <div class="text-button-wrapper">
+                <div class="link text-button" ng-click="onRemoveCustomDirBtnClicked($event); $event.stopPropagation();">
+                    Remove
+                </div>
+            </div>
+        </div>
+        <h4>Add New Custom Directory</h4>
+        <div class="ui">
+            <input type="text" ng-model="$parent.customDir" readonly>
+            <div class="text-button-wrapper">
+                <div class="text-button" ng-click="onOpenCustomDirBtnClicked()">
+                    Open
+                </div>
+            </div>
+            <div class="text-button-wrapper">
+                <div class="text-button" ng-click="onAddCustomDirBtnClicked()">
+                    Add
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="customdir-list-popup-footer">
+        <div class="close-button-wrapper">
+            <div class="text-button-wrapper">
+                <div class="remove text-button" ng-click="closeCustomDirListPopup();">
+                    Close
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="customdir-list-popup-background" class="customdir-list-popup-background"></div>

@@ -14,6 +14,9 @@
             font-color: $body-color + #202020;
             font-weight: bold;
         }
+        .blender-version {
+            @include margin-center();
+        }
         .menu-selector {
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;

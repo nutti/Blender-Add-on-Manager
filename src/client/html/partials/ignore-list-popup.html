@@ -1,0 +1,41 @@
+<div id="ignore-list-popup" class="ignore-list-popup">
+    <div class="ignore-list-popup-header">
+        <h3>Manage Ignore Add-on List</h3>
+    </div>
+    <div class="ignore-list-popup-body">
+        <h4>Included Add-on List</h4>
+        <div class="ui">
+            <div class="selectbox-wrapper" ng-show="true">
+                <select class="selectbox" name="ignoreCandListSelect" ng-model="$parent.ignoreCandListSelect" ng-options="key for key in ignoreCandItemList">
+                </select>
+            </div>
+            <div class="text-button-wrapper">
+                <div class="link text-button" ng-click="onAddIgnBtnClicked($event); $event.stopPropagation();">
+                    Add To Ignore List
+                </div>
+            </div>
+        </div>
+        <h4>Ignored Add-on List</h4>
+        <div class="ui">
+            <div class="selectbox-wrapper" ng-show="true">
+                <select class="selectbox" name="ignoreListSelect" ng-model="$parent.ignoreListSelect" ng-options="key for key in ignoreList">
+                </select>
+            </div>
+            <div class="text-button-wrapper">
+                <div class="link text-button" ng-click="onRmIgnBtnClicked($event); $event.stopPropagation();">
+                    Remove From Ignore List
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ignore-list-popup-footer">
+        <div class="close-button-wrapper">
+            <div class="text-button-wrapper">
+                <div class="remove text-button" ng-click="closeIgnoreListPopup();">
+                    Close
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="ignore-list-popup-background" class="ignore-list-popup-background"></div>

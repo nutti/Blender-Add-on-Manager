@@ -4,19 +4,6 @@
 <div class="blender-version selectbox-wrapper" ng-show="showBlVerSelect">
     <select class="selectbox" name="blVerSelect" ng-change="onAddonSelectorChanged()" ng-model="$parent.blVerSelect" ng-options="ver as ver for ver in blVerList">
     </select>
-    <!-- <div class="custom-dir-panel" ng-if="targetIsCustomDir()">
-        <input type="text" ng-model="customAddonDir" readonly>
-        <div class="text-button-wrapper">
-            <div class="text-button" ng-click="openCustomAddonDir()">
-                Open
-            </div>
-            <div class="text-button" ng-click="addCustomAddonDir()">
-                Add
-            </div>
-        </div>
-        <select class="selectbox" ng-change="onAddonSelectorChanged()" ng-model="customAddonDirSelect", ng-options="var as ver for ver in customAddonDirList">
-        </select>
-    </div> -->
 </div>
 <div class="menu-item-title">
     Addon List

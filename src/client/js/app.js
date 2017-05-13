@@ -10,6 +10,8 @@ import BlamDB from 'blam-db';
 const blamDB = new BlamDB();
 import BlamLocal from 'blam-local';
 const blamLocal = new BlamLocal();
+import BlamIgnore from 'blam-ignore';
+const blamIgnore = new BlamIgnore();
 import TaskMgr from 'task';
 const taskMgr = new TaskMgr();
 import Logger from 'logger';
@@ -17,7 +19,7 @@ const logger = new Logger();
 import * as Blam from 'blam';
 
 import {
-        DB_DIR, API_VERSION_FILE, GITHUB_ADDONS_DB, INSTALLED_ADDONS_DB,
+        DB_DIR, API_VERSION_FILE, GITHUB_ADDONS_DB, INSTALLED_ADDONS_DB, IGNORE_ADDONS_DB,
         CONFIG_DIR, CONFIG_FILE_PATH, BL_INFO_UNDEF, CONFIG_FILE_INIT
 } from 'blam-constants';
 
@@ -59,6 +61,30 @@ function hideErrorPopup($scope) {
     redrawApp($scope);
 }
 
+// show ignore-list popup
+function showIgnoreListPopup($scope) {
+    $('.ignore-list-popup').css('display', 'block');
+    $('.ignore-list-popup-background').css('display', 'block');
+}
+
+// close ignore-list popup
+function hideIgnoreListPopup($scope) {
+    $('.ignore-list-popup').css('display', 'none');
+    $('.ignore-list-popup-background').css('display', 'none');
+}
+
+// show customdir-list popup
+function showCustomdirListPopup($scope) {
+    $('.customdir-list-popup').css('display', 'block');
+    $('.customdir-list-popup-background').css('display', 'block');
+}
+
+// close customdir-list popup
+function hideCustomdirListPopup($scope) {
+    $('.customdir-list-popup').css('display', 'none');
+    $('.customdir-list-popup-background').css('display', 'none');
+}
+
 function loadGitHubAddonDB() {
     if (!Utils.isExistFile(GITHUB_ADDONS_DB)) { return {}; }
     logger.category('app').info("Loading GitHub add-ons DB file ...");
@@ -69,6 +95,12 @@ function loadInstalledAddonsDB() {
     if (!Utils.isExistFile(INSTALLED_ADDONS_DB)) { return {}; }
     logger.category('app').info("Loading installed add-ons DB file ...");
     return blamDB.readDBFile(INSTALLED_ADDONS_DB);
+}
+
+function loadIgnoreAddonDB() {
+    if (!Utils.isExistFile(IGNORE_ADDONS_DB)) { return; }
+    logger.category('app').info("Loading ignore add-ons DB file ...");
+    blamIgnore.loadFrom(IGNORE_ADDONS_DB);
 }
 
 
@@ -122,7 +154,7 @@ async function installAddon($scope, key, repo, cb) {
         // copy add-on to add-on directory
         let targetDir = target;
         if (isPackage) {
-            let keyAfter = key.replace(/\s/g, '_');
+            let keyAfter = key.replace(/[\.\s]/g, '_');
             targetDir = target + blamLocal.getPathSeparator() + keyAfter;
             fs.mkdirSync(targetDir);
         }
@@ -276,7 +308,7 @@ app.controller('MainController', function ($scope, $timeout) {
         {id: 2, name: 'GitHub', value: 'github'},
         {id: 3, name: 'Update', value: 'update'}
     ];
-    $scope.customAddonDirList = [];
+    $scope.customDirItemList = [];
     $scope.addonListActive = 1;
     $scope.addonOrder = 'ASCEND';
 
@@ -288,6 +320,44 @@ app.controller('MainController', function ($scope, $timeout) {
     // "Update Install DB" button
     $scope.onInstDBBtnClicked = function ($event) {
         updateInstalledAddonDB($scope);
+    };
+
+    // "Manage Ignore DB button"
+    $scope.onIgnDBBtnClicked = function ($event) {
+        showIgnoreListPopup($scope);
+    };
+
+    // "Add Custom Directory button"
+    $scope.onCustomDirBtnClicked = function ($event) {
+        showCustomdirListPopup($scope);
+    };
+
+    function updateIgnoreList($scope) {
+        $scope.ignoreList = blamIgnore.getList();
+        $scope.ignoreCandItemList = [];
+        let keys = Object.keys($scope.addonStatus);
+        for (let i = 0; i < keys.length; ++i) {
+            let k = keys[i];
+            if ($scope.addonStatus[k]['installed']) {
+                if (!blamIgnore.ignored(k)) {
+                    $scope.ignoreCandItemList.push(k);
+                }
+            }
+        }
+    }
+
+    // "Add to Ignore List" button
+    $scope.onAddIgnBtnClicked = function ($event) {
+        blamIgnore.addItem($scope.ignoreCandListSelect);
+        updateIgnoreList($scope);
+        blamIgnore.saveTo(IGNORE_ADDONS_DB);
+    };
+
+    // "Remove From Ignore List" button
+    $scope.onRmIgnBtnClicked = function ($event) {
+        blamIgnore.removeItem($scope.ignoreListSelect);
+        updateIgnoreList($scope);
+        blamIgnore.saveTo(IGNORE_ADDONS_DB);
     };
 
     $scope.isAddonListActive = function (index) {
@@ -347,7 +417,7 @@ app.controller('MainController', function ($scope, $timeout) {
 
     $scope.customAddonDir = "";
 
-    $scope.openCustomAddonDir = () => {
+    $scope.onOpenCustomDirBtnClicked = () => {
         const remote = electron.remote;
         const dialog = remote.dialog;
         dialog.showOpenDialog(null, {
@@ -355,20 +425,16 @@ app.controller('MainController', function ($scope, $timeout) {
             title: 'Select Custom Add-on Folder',
             defaultPath: '.'
         }, (folderName) => {
-            $scope.customAddonDir = folderName;
+            $scope.customDir = folderName;
             redrawApp($scope);
         });
     };
 
-    $scope.addCustomAddonDir = () => {
-        let total = $scope.customAddonDirList.length;
-        let dir = $scope.customAddonDir;
+    $scope.onAddCustomDirBtnClicked = () => {
+        let dir = $scope.customDir;
         if (!Utils.isDirectory(dir)) { return; }
         console.log(dir);
-        $scope.customAddonDirList.push({
-            id: total,
-            dir: dir
-        });
+        $scope.customDirItemList.push(dir);
         consle.log($scope.customAddonDirList);
     };
 
@@ -406,7 +472,11 @@ app.controller('MainController', function ($scope, $timeout) {
 
         $scope.githubAddons = loadGitHubAddonDB();
         $scope.installedAddons = loadInstalledAddonsDB();
+        loadIgnoreAddonDB();
         $scope.addonStatus = Blam.updateAddonStatus($scope.githubAddons, $scope.installedAddons, $scope.blVerList);
+
+        updateIgnoreList($scope);
+
         onAddonSelectorChanged();
 
         $scope.isOpsLocked = false;
@@ -416,10 +486,17 @@ app.controller('MainController', function ($scope, $timeout) {
 
     initApp();
 
+    $scope.closeIgnoreListPopup = () => {
+        hideIgnoreListPopup($scope);
+    };
 
     $scope.closeErrorPopup = () => {
         hideErrorPopup($scope);
-    }
+    };
+
+    $scope.closeCustomDirListPopup = () => {
+        hideCustomdirListPopup($scope);
+    };
 
     async function updateGitHubAddonDB($scope) {
         $scope.isOpsLocked = true;
@@ -449,6 +526,7 @@ app.controller('MainController', function ($scope, $timeout) {
 
     $scope.changedAddonOrder = onAddonSelectorChanged;
 
+
     function onAddonSelectorChanged() {
         // collect filter condition
         var activeList = $scope.addonLists[$scope.addonListActive]['value'];
@@ -475,13 +553,15 @@ app.controller('MainController', function ($scope, $timeout) {
                         ['INSTALLED', 'UPDATABLE'],
                         blVer,
                         activeCategory,
-                        searchStr);
+                        searchStr,
+                        blamIgnore.getList());
                     addons = Blam.sortAddons(
                         $scope.addonStatus,
                         addons,
                         'installed',
                         $scope.addonOrderItemSelect.value,
-                        $scope.addonOrder);
+                        $scope.addonOrder,
+                        );
                 }
                 $scope.addonInfoTpl = 'partials/addon-info/installed.html';
                 break;
@@ -494,7 +574,8 @@ app.controller('MainController', function ($scope, $timeout) {
                         ['INSTALLED', 'NOT_INSTALLED', 'UPDATABLE'],
                         blVer,
                         activeCategory,
-                        searchStr);
+                        searchStr,
+                        blamIgnore.getList());
                     addons = Blam.sortAddons(
                         $scope.addonStatus,
                         addons,
@@ -513,7 +594,8 @@ app.controller('MainController', function ($scope, $timeout) {
                         ['UPDATABLE'],
                         blVer,
                         activeCategory,
-                        searchStr);
+                        searchStr,
+                        blamIgnore.getList());
                 }
                 $scope.addonInfoTpl = 'partials/addon-info/github.html';
                 break;

@@ -1,54 +1,56 @@
-.text-button-wrapper {
-    width: 10rem;
-    max-width: 10rem;
-    display: inline-block;
-    .text-button {
-        cursor: pointer;
-        display: block;
-        background-color: $button-bgcolor;
-        border: 1px solid #000000;
-        padding: 5px;
-        margin: 3px;
-        margin-left: auto;
-        margin-right: auto;
-        width: 80%;
-        text-align: center;
-        @include border-radius(3px);
-        &:hover {
-            background-color: $button-hover-bgcolor;
+@mixin text-button($width) {
+    .text-button-wrapper {
+        @include fixed-width($width);
+        margin-right: 1rem;
+        margin-left: 1rem;
+        display: inline-block;
+        .text-button {
+            @include border-radius(3px);
+            @include margin-center();
+            cursor: pointer;
+            display: block;
+            background-color: $button-bgcolor;
+            border: 1px solid #000000;
+            padding: 5px;
+            margin: 3px;
+            width: 100%;
+            text-align: center;
+            &:hover {
+                background-color: $button-hover-bgcolor;
+            }
         }
-    }
-    .remove {
-        color: $body-color + #442020;
-        background-color: $button-bgcolor + #440000;
-        &:hover {
-            color: $body-color + #300000;
-            background-color: $button-hover-bgcolor + #300000;
+        .remove {
+            color: $body-color + #442020;
+            background-color: $button-bgcolor + #440000;
+            &:hover {
+                color: $body-color + #300000;
+                background-color: $button-hover-bgcolor + #300000;
+            }
         }
-    }
-    .update {
-        color: $body-color + #202044;
-        background-color: $button-bgcolor + #000044;
-        &:hover {
-            color: $body-color + #000030;
-            background-color: $button-hover-bgcolor + #000030;
+        .update {
+            color: $body-color + #202044;
+            background-color: $button-bgcolor + #000044;
+            &:hover {
+                color: $body-color + #000030;
+                background-color: $button-hover-bgcolor + #000030;
+            }
         }
-    }
-    .download {
-        color: $body-color + #103310;
-        background-color: $button-hover-bgcolor + #002500;
-        &:hover {
-            color: $body-color + #101810;
-            background-color: $button-hover-bgcolor + #001500;
+        .download {
+            color: $body-color + #103310;
+            background-color: $button-hover-bgcolor + #002500;
+            &:hover {
+                color: $body-color + #101810;
+                background-color: $button-hover-bgcolor + #001500;
+            }
         }
-    }
-    .locked {
-        color: $body-color - #202020;
-        background-color: $button-bgcolor - #202020;
-        &:hover {
-            cursor: wait;
+        .locked {
             color: $body-color - #202020;
             background-color: $button-bgcolor - #202020;
+            &:hover {
+                cursor: wait;
+                color: $body-color - #202020;
+                background-color: $button-bgcolor - #202020;
+            }
         }
     }
 }

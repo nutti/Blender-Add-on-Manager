@@ -9,6 +9,11 @@
             <img src="../images/update_github_addon.png" onmouseover="this.src='../images/update_github_addon_hover.png'" onmouseout="this.src='../images/update_github_addon.png'" alt="Update GitHub Add-on DB" />
         </div>
     </div>
+    <div class="menu-button-wrapper">
+        <div class="menu-button" id="manage-ignore-addon-db" ng-click="!isOpsLocked && onIgnDBBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
+            <img src="../images/update_github_addon.png" onmouseover="this.src='../images/update_github_addon_hover.png'" onmouseout="this.src='../images/update_github_addon.png'" alt="Manage Ignore Add-on DB" />
+        </div>
+    </div>
 </div>
 <div class="search-panel">
     <div class="search">

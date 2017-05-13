@@ -83,8 +83,15 @@ export function compareVersion(v1, v2) {
     return comp(v1, v2, 0, len);
 }
 
-export function filterAddons(addons, source, status, blVer, category, regex) {
+export function filterAddons(addons, source, status, blVer, category, regex, ignore) {
     let keys = Object.keys(addons).filter( (key) => {
+        // filtered by ignore list
+        for (let i = 0; i < ignore.length; ++i) {
+            if (ignore[i] === key) {
+                return false;
+            }
+        }
+
         // filtered by source
         if (addons[key][source] === undefined) { return false; }
 

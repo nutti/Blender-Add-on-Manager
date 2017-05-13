@@ -1,8 +1,10 @@
 @mixin selectbox($width) {
     .selectbox-wrapper {
         @include fixed-width($width);
-        @include margin-center();
         .selectbox {
+            @include appearance(none);
+            @include margin-center();
+            @include border-radius(3px);
             display: block;
             color: $body-color;
             background-color: $selectbox-bgcolor;
@@ -10,8 +12,7 @@
             border: 1px solid #000000;
             padding: 0.5rem;
             margin: 3px;
-            @include appearance(none);
-            @include border-radius(3px);
+            cursor: pointer;
             &:focus {
                 outline: 0;
             }

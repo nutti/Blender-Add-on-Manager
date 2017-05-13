@@ -4,16 +4,16 @@
 
 @import "base.scss";
 
+@import "lib/_fonts.scss";
+@import "lib/_variables.scss";
+@import "lib/_mixins.scss";
+
 @import "components/_button.scss";
 @import "components/_searchbar.scss";
 @import "components/_selectbox.scss";
 @import "components/_progressbar.scss";
 @import "components/_popup.scss";
 @import "components/_radiobutton.scss";
-
-@import "lib/_fonts.scss";
-@import "lib/_variables.scss";
-@import "lib/_mixins.scss";
 
 @import "modules/_app.scss";
 @import "modules/_header.scss";
