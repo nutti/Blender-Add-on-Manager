@@ -12,6 +12,8 @@
             color: $body-color - #404040;
             font-size: 1.8rem;
             padding: 0.1rem;
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
             margin-top: ($header-height - 2.8rem - 0.6rem) / 2;
             &:focus {
                 @include border-radius(7px);

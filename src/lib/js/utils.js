@@ -109,6 +109,16 @@ export function getAPIURL(config) {
     return apis;
 }
 
+// check if GitHub config is valid
+export function isGitHubConfigValid(config) {
+    if (!config) { return false; }
+    if (!config['github']) { return false; }
+    if (!config['github']['username']) { return false; }
+    if (!config['github']['password']) { return false; }
+
+    return true;
+}
+
 export function downloadFile(config, url, saveTo) {
     return new Promise( (resolve) => {
         let r;
@@ -184,3 +194,4 @@ export function getRemoteFileSize(config, url) {
         });
     });
 }
+

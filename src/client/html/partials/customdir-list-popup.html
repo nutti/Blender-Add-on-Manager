@@ -3,29 +3,54 @@
         <h3>Manage Custom Installation Target</h3>
     </div>
     <div class="customdir-list-popup-body">
+
+        <h4>Current Target</h4>
+        <div class="ui">
+            <div class="text-box-wrapper">
+                <input type="text" class="text-box" ng-model="$parent.customDir" readonly>
+            </div>
+        </div>
+
+
         <h4>Custom Target List</h4>
         <div class="ui">
             <div class="selectbox-wrapper" ng-show="true">
                 <select class="selectbox" name="customDirListSelect" ng-model="$parent.customDirListSelect" ng-options="key for key in customDirItemList">
                 </select>
             </div>
-            <div class="text-button-wrapper">
-                <div class="link text-button" ng-click="onRemoveCustomDirBtnClicked($event); $event.stopPropagation();">
-                    Remove
+        </div>
+        <div class="ui">
+            <div class="buttons">
+                <div class="text-button-wrapper">
+                    <div class="text-button" ng-click="onSetCustomDirBtnClicked(); $event.stopPropagation();">
+                        Set as Target
+                    </div>
+                </div>
+                <div class="text-button-wrapper">
+                    <div class="text-button" ng-click="onRmCustomDirBtnClicked(); $event.stopPropagation();">
+                        Remove
+                    </div>
                 </div>
             </div>
         </div>
+
         <h4>Add New Custom Directory</h4>
         <div class="ui">
-            <input type="text" ng-model="$parent.customDir" readonly>
-            <div class="text-button-wrapper">
-                <div class="text-button" ng-click="onOpenCustomDirBtnClicked()">
-                    Open
-                </div>
+            <div class="text-box-wrapper">
+                <input type="text" class="text-box" ng-model="$parent.newCustomDir" readonly>
             </div>
-            <div class="text-button-wrapper">
-                <div class="text-button" ng-click="onAddCustomDirBtnClicked()">
-                    Add
+        </div>
+        <div class="ui">
+            <div class="buttons">
+                <div class="text-button-wrapper">
+                    <div class="text-button" ng-click="onOpenCustomDirBtnClicked(); $event.stopPropagation();">
+                        Open
+                    </div>
+                </div>
+                <div class="text-button-wrapper">
+                    <div class="text-button" ng-click="onAddCustomDirBtnClicked(); $evnet.stopPropagation();">
+                        Add
+                    </div>
                 </div>
             </div>
         </div>

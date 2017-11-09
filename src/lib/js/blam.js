@@ -83,7 +83,7 @@ export function compareVersion(v1, v2) {
     return comp(v1, v2, 0, len);
 }
 
-export function filterAddons(addons, source, status, blVer, category, regex, ignore) {
+export function filterAddons(addons, source, status, target, category, regex, ignore) {
     let keys = Object.keys(addons).filter( (key) => {
         // filtered by ignore list
         for (let i = 0; i < ignore.length; ++i) {
@@ -98,17 +98,17 @@ export function filterAddons(addons, source, status, blVer, category, regex, ign
         // filtered by status
         let statusMatched = false;
         for (let i = 0; i < status.length; ++i) {
-            if (addons[key]['status'][blVer] && addons[key]['status'][blVer] === status[i]) {
+            if (addons[key]['status'][target] && addons[key]['status'][target] === status[i]) {
                 statusMatched = true;
             }
         }
 
         // filtered by blender version (only installed)
-        if (source === 'installed' && addons[key][source][blVer] === undefined) { return false; }
+        if (source === 'installed' && addons[key][source][target] === undefined) { return false; }
 
         let elm;
         if (source === 'installed') {
-            elm = addons[key][source][blVer];
+            elm = addons[key][source][target];
         }
         else {
             elm = addons[key][source];
@@ -130,10 +130,19 @@ export function filterAddons(addons, source, status, blVer, category, regex, ign
     return keys;
 }
 
-function _compareAddonsByBlInfoItem(a, b, list, item, order)
+function _compareAddonsByBlInfoItem(a, b, list, target, item, order)
 {
-    let an = a[list]['bl_info'][item];
-    let bn = b[list]['bl_info'][item]; 
+    let an;
+    let bn;
+
+    if (list == 'installed') {
+        an = a[list][target]['bl_info'][item];
+        bn = b[list][target]['bl_info'][item];
+    }
+    else if (list == 'github') {
+        an = a[list]['bl_info'][item];
+        bn = b[list]['bl_info'][item];
+    }
 
     if (an > bn) {
         return order == 'ASCEND' ? 1 : -1;
@@ -145,26 +154,26 @@ function _compareAddonsByBlInfoItem(a, b, list, item, order)
     return 0;
 }
 
-function _compareAddons(a, b, list, item, order)
+function _compareAddons(a, b, list, target, item, order)
 {
     switch (item) {
         case 'ADDON_NAME':
-            return _compareAddonsByBlInfoItem(a, b, list, 'name', order);
+            return _compareAddonsByBlInfoItem(a, b, list, target, 'name', order);
             break;
         case 'AUTHOR':
-            return _compareAddonsByBlInfoItem(a, b, list, 'author', order);
+            return _compareAddonsByBlInfoItem(a, b, list, target, 'author', order);
             break;
     }
 
     return 0;
 }
 
-export function sortAddons(addons, keys, list, item, order)
+export function sortAddons(addons, keys, list, target, item, order)
 {
     if (item == '') { return keys; }
 
     keys.sort( function (a, b) {
-        return _compareAddons(addons[a], addons[b], list, item, order);
+        return _compareAddons(addons[a], addons[b], list, target, item, order);
     });
 
     return keys;
@@ -204,9 +213,11 @@ export function updateAddonStatus(github, installed, blVers)
 
     // setup add-on list installed on machine
     if (installed) {
-        for (let blVer in installed) {
-            for (let i = 0, len = installed[blVer].length; i < len; ++i) {
-                let installedKey = installed[blVer][i]['bl_info']['name'] + "@" + installed[blVer][i]['bl_info']['author'];
+        let defaultInstList = installed['default'];
+        for (let blVer in defaultInstList) {
+            let dil = defaultInstList[blVer];
+            for (let i = 0, len = dil.length; i < len; ++i) {
+                let installedKey = dil[i]['bl_info']['name'] + "@" + dil[i]['bl_info']['author'];
                 if (addonStatus[installedKey] == undefined) {
                     addonStatus[installedKey] = {};
                 }
@@ -214,17 +225,42 @@ export function updateAddonStatus(github, installed, blVers)
                     addonStatus[installedKey]['installed'] = {}
                 }
                 if (addonStatus[installedKey]['installed'][blVer] == undefined) {
-                    addonStatus[installedKey]['installed'][blVer] = installed[blVer][i];
+                    addonStatus[installedKey]['installed'][blVer] = dil[i];
                 }
                 // newest version is registered
                 else {
                     let ver1 = addonStatus[installedKey]['installed'][blVer]['bl_info']['version'];
-                    let ver2 = installed[blVer][i]['bl_info']['version'];
+                    let ver2 = dil[i]['bl_info']['version'];
                     if (compareAddonVersion(ver1, ver2) == -1) {    // ver1 < ver2
-                        addonStatus[installedKey]['installed'][blVer] = installed[blVer][i];
+                        addonStatus[installedKey]['installed'][blVer] = dil[i];
                     }
                 }
             }
+        }
+        let customInstList = installed['custom'];
+        for (let dir in customInstList) {
+            let cil = customInstList[dir];
+            for (let i = 0, len = cil.length; i < len; ++i) {
+                let installedKey = cil[i]['bl_info']['name'] + "@" + cil[i]['bl_info']['author'];
+                if (addonStatus[installedKey] == undefined) {
+                    addonStatus[installedKey] = {};
+                }
+                if (addonStatus[installedKey]['installed'] == undefined) {
+                    addonStatus[installedKey]['installed'] = {}
+                }
+                if (addonStatus[installedKey]['installed'][dir] == undefined) {
+                    addonStatus[installedKey]['installed'][dir] = cil[i];
+                }
+                // newest version is registered
+                else {
+                    let ver1 = addonStatus[installedKey]['installed'][dir]['bl_info']['version'];
+                    let ver2 = cil[i]['bl_info']['version'];
+                    if (compareAddonVersion(ver1, ver2) == -1) {    // ver1 < ver2
+                        addonStatus[installedKey]['installed'][dir] = cil[i];
+                    }
+                }
+            }
+
         }
     }
 
@@ -235,22 +271,27 @@ export function updateAddonStatus(github, installed, blVers)
             addonStatus[k]['status'] = {};
         }
         // check not only installed but also other version
-        for (let i = 0; i < blVers.length; ++i) {
+        let instList = Object.keys(installed['default']);
+        let customInstList = Object.keys(installed['custom']);
+        for (let i = 0; i < customInstList.length; ++i) {
+            instList.push(customInstList[i]);
+        }
+        for (let i = 0; i < instList.length; ++i) {
+            let inst = instList[i];
             let status = '';
-            let blVer = blVers[i];
 
             if (addon['github'] == undefined) {
-                if (addon['installed'] != undefined && addon['installed'][blVer] != undefined) {
+                if (addon['installed'] != undefined && addon['installed'][inst] != undefined) {
                     status = 'INSTALLED';
                 }
             }
             else {
-                if (addon['installed'] == undefined || addon['installed'][blVer] == undefined) {
+                if (addon['installed'] == undefined || addon['installed'][inst] == undefined) {
                     status = 'NOT_INSTALLED';
                 }
                 else {
                     let ver1 = addon['github']['bl_info']['version'];
-                    let ver2 = addon['installed'][blVer]['bl_info']['version'];
+                    let ver2 = addon['installed'][inst]['bl_info']['version'];
                     if (compareAddonVersion(ver1, ver2) == 1) {
                         status = 'UPDATABLE';   // ver1 > ver2
                     }
@@ -259,7 +300,7 @@ export function updateAddonStatus(github, installed, blVers)
                     }
                 }
             }
-            addonStatus[k]['status'][blVer] = status;
+            addonStatus[k]['status'][inst] = status;
         }
     }
 

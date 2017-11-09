@@ -1,22 +1,22 @@
 <div ng-repeat="(i, key) in main.repoList">
     <div class="addon-item">
         <div class="name">
-            {{blStr('name', addonStatus[key].installed[blVerSelect].bl_info.name);}}
+            {{blStr('name', addonStatus[key].installed[targetDir].bl_info.name);}}
         </div>
         <div class="description">
-            {{blStr('description', addonStatus[key].installed[blVerSelect].bl_info.description);}}
+            {{blStr('description', addonStatus[key].installed[targetDir].bl_info.description);}}
         </div>
         <div class="author">
-            {{blStr('author', addonStatus[key].installed[blVerSelect].bl_info.author);}}
+            {{blStr('author', addonStatus[key].installed[targetDir].bl_info.author);}}
         </div>
         <div class="version">
-            <img src="../images/addon_version.png" /> {{blStr('version', addonStatus[key].installed[blVerSelect].bl_info.version);}}
+            <img src="../images/addon_version.png" /> {{blStr('version', addonStatus[key].installed[targetDir].bl_info.version);}}
         </div>
         <div class="bl-version">
-            <img src="../images/ext/BlenderDesktopLogo.png" /> {{blStr('bl-version', addonStatus[key].installed[blVerSelect].bl_info.blender);}}
+            <img src="../images/ext/BlenderDesktopLogo.png" /> {{blStr('bl-version', addonStatus[key].installed[targetDir].bl_info.blender);}}
         </div>
         <div class="category">
-            <img src="../images/category.png" /> {{blStr('category', addonStatus[key].installed[blVerSelect].bl_info.category);}}
+            <img src="../images/category.png" /> {{blStr('category', addonStatus[key].installed[targetDir].bl_info.category);}}
         </div>
         <div class="buttons">
             <div ng-include="'partials/addon-info/buttons.html'"></div>

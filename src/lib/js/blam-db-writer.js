@@ -60,26 +60,36 @@ export default class DBWriter
         });
     }
 
-    find(key) {
+    findAll() {
         return new Promise( (resolve) => {
             if (!this['collection']) { throw new Error("Collection is null"); }
 
-            this['collection'].find(key, (err, result) => {
-                if (err) {
-                    throw new Error("Failed to process findOne");
-                }
-                resolve();
-            });
+            let results = this['collection'].find();
+
+            resolve(results);
         });
     }
 
     findOne(key) {
-        return new Promise ( (resolve) => {
+        return new Promise( (resolve) => {
             if (!this['collection']) { throw new Error("Collection is null"); }
 
             this['collection'].findOne(key, (err, result) => {
                 if (err) {
                     throw new Error("Failed to process findOne");
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    remove(key) {
+        return new Promise( (resolve) => {
+            if (!this['collection']) { throw new Error("Collection is null"); }
+
+            this['collection'].remove(key, (err, result) => {
+                if (err) {
+                    throw new Error("Failed to process remove");
                 }
                 resolve(result);
             });

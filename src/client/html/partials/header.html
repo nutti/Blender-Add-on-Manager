@@ -11,7 +11,12 @@
     </div>
     <div class="menu-button-wrapper">
         <div class="menu-button" id="manage-ignore-addon-db" ng-click="!isOpsLocked && onIgnDBBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
-            <img src="../images/update_github_addon.png" onmouseover="this.src='../images/update_github_addon_hover.png'" onmouseout="this.src='../images/update_github_addon.png'" alt="Manage Ignore Add-on DB" />
+            <img src="../images/manage_ignore_addon_list.png" onmouseover="this.src='../images/manage_ignore_addon_list_hover.png'" onmouseout="this.src='../images/manage_ignore_addon_list.png'" alt="Manage Ignore Add-on DB" />
+        </div>
+    </div>
+    <div class="menu-button-wrapper">
+        <div class="menu-button" id="manage-custom-dir" ng-click="!isOpsLocked && onMngCustomDirBtnClicked(); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
+            <img src="../images/manage_custom_install_dir.png" onmouseover="this.src='../images/manage_custom_install_dir_hover.png'" onmouseout="this.src='../images/manage_custom_install_dir.png'" alt="Manage Custom Installation Target" />
         </div>
     </div>
 </div>
@@ -31,11 +36,10 @@
         <div class="sort-order">
             <div class="radiobutton">
                 <input type="radio" id="ascend" ng-model="$parent.addonOrder" value="ASCEND" ng-change="onAddonSelectorChanged()">
-                <label for="ascend">Ascend</label>
+                <label for="ascend">Ascend</label><br>
                 <input type="radio" id="descend" ng-model="$parent.addonOrder" value="DESCEND" ng-change="onAddonSelectorChanged()">
                 <label for="descend">Descend</label>
         </div>
         </div>
     </div>
 </div>
-

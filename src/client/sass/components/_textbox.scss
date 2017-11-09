@@ -1,0 +1,14 @@
+@mixin text-box($width) {
+    .text-box-wrapper {
+        @include fixed-width($width);
+        .text-box {
+            font-size: 1rem;
+            font-family: "Default";
+            color: $body-color;
+            background-color: $button-bgcolor;
+            padding: 0.4rem;
+            border: 1px solid #666666;
+            width: 100%;
+        }
+    };
+}

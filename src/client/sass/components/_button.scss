@@ -7,15 +7,17 @@
         .text-button {
             @include border-radius(3px);
             @include margin-center();
+            color: $body-color;
             cursor: pointer;
             display: block;
             background-color: $button-bgcolor;
             border: 1px solid #000000;
             padding: 5px;
-            margin: 3px;
+            //margin: 3px;
             width: 100%;
             text-align: center;
             &:hover {
+                color: $body-color - #101010;
                 background-color: $button-hover-bgcolor;
             }
         }

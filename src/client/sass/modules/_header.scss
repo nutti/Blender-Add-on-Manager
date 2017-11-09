@@ -64,15 +64,17 @@
                 .sort {
                     display: flex;
                     width: 40%;
-                    margin-top: 1rem;
+                    padding-left: 2.5rem;
                     .sort-item {
                         @include selectbox(80%);
                         width: 70%;
+                        margin-top: 1.3rem;
                     }
                     .sort-order {
                         @include radiobutton();
                         width: 30%;
                         text-align: left;
+                        margin-top: 1.2rem;
                     }
                 }
             }
