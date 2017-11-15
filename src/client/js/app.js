@@ -31,11 +31,27 @@ import {
 var config = null;
 var app = angular.module('blAddonMgr', [])
 
-
 app.controller('MainController', function ($scope, $timeout) {
 
     var main = this;
     main.repoList = [];
+
+    function adjustBodyHeight() {
+        let hh = $('.app-body .header').outerHeight();
+        let fh = $('.app-body .footer').outerHeight();
+        let h = $(window).height() - hh - fh;
+        $('.app-body .container').css('height', h);
+        $('.app-body .menu').css('height', h);
+    }
+
+    $(window).resize( () => {
+        adjustBodyHeight();
+    });
+
+    $(window).ready( () => {
+        adjustBodyHeight();
+    });
+
 
     $scope.blVerList = blamOS.getBlenderVersions();
     $scope.blVerList.push('Custom');

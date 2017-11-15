@@ -3,8 +3,8 @@
         background-color: $container-bgcolor;
         width: 100% - $menu-width;
         max-width: 100% - $menu-width;
-        padding-top: $header-height;
-        padding-bottom: $footer-height;
+        margin-top: $header-height;
+        margin-bottom: $footer-height;
         .addon-info {
             @include box-sizing(border-box);
             padding: 1rem;

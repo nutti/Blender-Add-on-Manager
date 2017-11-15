@@ -1,5 +1,19 @@
-@mixin scrollbar() {
+@mixin scrollbar($width) {
     ::-webkit-scrollbar {
+        width: $width;
+        background: #222222;
+        &:hover {
+            background: #444444;
+        }
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #666666;
+        width: $width;
+        &:hover {
+            background: #999999;
+        }
+    }
+    ::-webkit-scrollbar-corner {
         display: none;
     }
 }
