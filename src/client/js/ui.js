@@ -51,4 +51,3 @@ function hideCustomdirListPopup($scope) {
     $('.customdir-list-popup').css('display', 'none');
     $('.customdir-list-popup-background').css('display', 'none');
 }
-

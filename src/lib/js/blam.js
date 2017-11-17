@@ -179,7 +179,7 @@ export function sortAddons(addons, keys, list, target, item, order)
     return keys;
 }
 
-export function updateAddonStatus(github, installed, blVers)
+export function updateAddonStatus(github, installed, blVers, favList)
 {
     // key--
     //      |- github--
@@ -188,6 +188,7 @@ export function updateAddonStatus(github, installed, blVers)
     //      |          |- blVer
     //      |                  |- bl_info
     //      |- status
+    //      |- favorited
     let addonStatus = {};
 
     // setup add-on list on GitHub
@@ -270,6 +271,16 @@ export function updateAddonStatus(github, installed, blVers)
         if (addonStatus[k]['status'] == undefined) {
             addonStatus[k]['status'] = {};
         }
+
+        // check if the add-on is favorited
+        addonStatus[k]['favorited'] = false;
+        for (let i in favList) {
+            let fav = favList[i];
+            if (fav == k) {
+                addonStatus[k]['favorited'] = true;
+            }
+        }
+
         // check not only installed but also other version
         let instList = Object.keys(installed['default']);
         let customInstList = Object.keys(installed['custom']);

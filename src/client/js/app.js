@@ -14,6 +14,8 @@ import BlamCustomDir from 'blam-custom-dir';
 const blamCustomDir = new BlamCustomDir();
 import BlamLocal from 'blam-local';
 const blamLocal = new BlamLocal(blamCustomDir, blamOS);
+import BlamFavorite from 'blam-favorite';
+const blamFavorite = new BlamFavorite();
 import BlamIgnore from 'blam-ignore';
 const blamIgnore = new BlamIgnore();
 import TaskMgr from 'task';
@@ -23,8 +25,9 @@ const logger = new Logger();
 import * as Blam from 'blam';
 
 import {
-        DB_DIR, API_VERSION_FILE, GITHUB_ADDONS_DB, INSTALLED_ADDONS_DB, IGNORE_ADDONS_DB,
-        CUSTOM_DIR_DB, CONFIG_DIR, CONFIG_FILE_PATH, BL_INFO_UNDEF, CONFIG_FILE_INIT
+        DB_DIR, API_VERSION_FILE, GITHUB_ADDONS_DB, INSTALLED_ADDONS_DB,
+        FAVORITE_ADDONS_DB, IGNORE_ADDONS_DB, CUSTOM_DIR_DB, CONFIG_DIR,
+        CONFIG_FILE_PATH, BL_INFO_UNDEF, CONFIG_FILE_INIT
 } from 'blam-constants';
 
 
@@ -92,7 +95,8 @@ app.controller('MainController', function ($scope, $timeout) {
     $scope.addonLists = [
         {id: 1, name: 'Installed', value: 'installed'},
         {id: 2, name: 'GitHub', value: 'github'},
-        {id: 3, name: 'Update', value: 'update'}
+        {id: 3, name: 'Update', value: 'update'},
+        {id: 4, name: 'Favorite', value: 'favorite'},
     ];
     $scope.customDirItemList = [];
     $scope.addonListActive = 1;
@@ -196,6 +200,10 @@ app.controller('MainController', function ($scope, $timeout) {
 
     $scope.getAddonStatus = (key) => {
         return $scope.addonStatus[key]['status'][$scope.targetDir];
+    };
+
+    $scope.isAddonFavorited = (key) => {
+        return $scope.addonStatus[key]['favorited'];
     };
 
     $scope.onOpenCustomDirBtnClicked = () => {
@@ -334,6 +342,38 @@ app.controller('MainController', function ($scope, $timeout) {
                 }
                 $scope.addonInfoTpl = 'partials/addon-info/github.html';
                 break;
+            case 'favorite':
+                logger.category('app').info("Show Favorited add-on list");
+                if ($scope.addonStatus) {
+                    let addon_keys = Blam.filterAddons(
+                        $scope.addonStatus,
+                        'github',
+                        ['INSTALLED', 'NOT_INSTALLED', 'UPDATABLE'],
+                        $scope.targetDir,
+                        activeCategory,
+                        searchStr,
+                        blamIgnore.getList());
+                    // filtered by favorited
+                    let favList = blamFavorite.getList();
+                    addon_keys = addon_keys.filter( (key) => {
+                        for (let i in favList) {
+                            let fav = favList[i];
+                            if (fav === key) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                    addons = Blam.sortAddons(
+                        $scope.addonStatus,
+                        addon_keys,
+                        'github',
+                        $scope.targetDir,
+                        $scope.addonOrderItemSelect.value,
+                        $scope.addonOrder);
+                }
+                $scope.addonInfoTpl = 'partials/addon-info/github.html';
+                break;
             default:
                 return;
         }
@@ -415,6 +455,27 @@ app.controller('MainController', function ($scope, $timeout) {
             });
         }
 
+        function onFavBtnClicked($event) {
+            try {
+                let repoIndex = $($event.target).data('repo-index');
+                let key = main.repoList[repoIndex];
+                if (!blamFavorite.favorited(key)) {
+                    blamFavorite.addItem(key);
+                }
+                else {
+                    blamFavorite.removeItem(key);
+                }
+                blamFavorite.saveTo(FAVORITE_ADDONS_DB);
+                updateInstalledAddonDB($scope);
+                redrawApp($scope);
+            }
+            catch (e) {
+                handleException($scope, e);
+            }
+        }
+
+        // "Fav" button
+        $scope.onFavBtnClicked = onFavBtnClicked;
         // "Link" button
         $scope.onLnBtnClicked = onLnBtnClicked;
         // "Download" button
@@ -467,11 +528,13 @@ app.controller('MainController', function ($scope, $timeout) {
 
         loadGitHubAddonDB();
         loadInstalledAddonsDB();
+        loadFavoriteAddonDB();
         loadIgnoreAddonDB();
         loadCustomDirDB();
         $scope.addonStatus = Blam.updateAddonStatus(blamDB.getAddonList(),
                                                     blamLocal.getAddonList(),
-                                                    $scope.blVerList);
+                                                    $scope.blVerList,
+                                                    blamFavorite.getList());
 
         updateIgnoreList($scope);
         updateCustomDirList($scope);
@@ -520,7 +583,8 @@ app.controller('MainController', function ($scope, $timeout) {
         // update app's internal DB data
         $scope.addonStatus = Blam.updateAddonStatus(blamDB.getAddonList(),
                                                     blamLocal.getAddonList(),
-                                                    $scope.blVerList);
+                                                    $scope.blVerList,
+                                                    blamFavorite.getList());
         onAddonSelectorChanged();
 
         // unlock app

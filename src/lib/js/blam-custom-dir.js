@@ -3,8 +3,6 @@
 import fs from 'fs';
 
 import * as Utils from 'utils';
-import Logger from 'logger';
-const logger = new Logger();
 
 export default class BlamCustomDir
 {
@@ -61,7 +59,7 @@ export default class BlamCustomDir
         let json = JSON.parse(data);
         this['customDirList'] = json['customDirList'] || [];
         this['currentTarget'] = json['currentTarget'] || "";
-        
+
         return 0;
     }
 
