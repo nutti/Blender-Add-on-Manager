@@ -301,48 +301,6 @@ export default class BlamDB
         return this['addonList'];
     }
 
-    // make API status file
-    makeAPIStatusFile(filename) {
-        let self_ = this;
-        return new Promise( (resolve) => {
-            let apiURLs = Utils.getAPIURL(self_.config);
-            if (!apiURLs) { throw new Error("Invalid API URL"); }
-            // if there is DB file on local, delete it
-            if (Utils.isExistFile(filename)) {
-                fs.unlinkSync(filename);
-                logger.category('lib').info("Removed old API status file");
-            }
-            // request callback
-            let onRequest = (err, res, body) => {
-                if (err) { throw new Error("Failed to fetch data from API.\n" + JSON.stringify(err)); }
-                if (res.statusCode != 200) { throw new Error("Failed to fetch data from API. (status=" + res.statusCode + ")"); }
-
-                fs.appendFileSync(filename, JSON.stringify(body, null, '  '));
-                logger.category('lib').info("API status data is saved to " + filename);
-                resolve();
-            };
-
-            // send request to api server
-            let proxyURL = Utils.getProxyURL(self_.config);
-            if (proxyURL) {
-                logger.category('lib').info("Use proxy server");
-                request({
-                    tunnel: true,
-                    url: apiURLs['version'],
-                    json: true,
-                    proxy: proxyURL
-                }, onRequest);
-            }
-            else {
-                logger.category('lib').info("Not use proxy server");
-                request({
-                    url: apiURLs['version'],
-                    json: true,
-                }, onRequest);
-            }
-        });
-    }
-
     // fetch add-on information from server, and save to local DB file
     fetchFromServer(apiURLs, proxyURL) {
 
@@ -360,7 +318,6 @@ export default class BlamDB
             };
 
             // send request to api server
-            
             if (proxyURL) {
                 logger.category('lib').info("Use proxy server");
                 request({

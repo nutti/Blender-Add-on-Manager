@@ -588,7 +588,6 @@ app.controller('MainController', function ($scope, $timeout) {
 
             if (!apiURLs) { throw new Error("Invalid API URL"); }
 
-            const version = await blamDB.makeAPIStatusFile(API_VERSION_FILE);
             const fetch = await blamDB.fetchFromServer(apiURLs, proxyURL);
 
             blamDB.saveTo(GITHUB_ADDONS_DB);
@@ -647,7 +646,6 @@ app.controller('MainController', function ($scope, $timeout) {
         }
 
         // update DB files
-        const version = await blamDB.makeAPIStatusFile(API_VERSION_FILE);
         const fetch = await blamDB.fetchFromServer(apiURLs, proxyURL);
 
         blamDB.saveTo(GITHUB_ADDONS_DB);
