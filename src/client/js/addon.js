@@ -82,16 +82,14 @@ async function installAddon($scope, key, repo, cb) {
 
 function removeAddon($scope, repo) {
     try {
-        var deleteFrom = repo['src_path'];
-        if (!deleteFrom) { throw new Error(deleteFrom + "is not found"); }
+        let deleteFrom = repo['src_path'];
+        if (!deleteFrom) { throw new Error(deleteFrom + " is not found"); }
         logger.category('app').info("Deleting '" + deleteFrom + "' ...");
         advanceProgressAndUpdate($scope);
-        var result = del.sync([deleteFrom], {force: true});
+        let result = del.sync([deleteFrom], {force: true});
         logger.category('app').info("Deleted '" + deleteFrom + "'");
     }
     catch (e) {
         handleException($scope, e);
     }
 }
-
-

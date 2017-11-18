@@ -1,0 +1,40 @@
+<div id="migrate-addon-popup" class="migrate-addon-popup">
+    <div class="migrate-addon-popup-header">
+        <h3>Migrate Addons</h3>
+    </div>
+    <div class="migrate-addon-popup-body">
+
+        <h4>Source Version</h4>
+        <div class="ui">
+            <div class="selectbox-wrapper" ng-show="true">
+                <select class="selectbox" name="blVerSrc" ng-model="$parent.blVerSrc" ng-options="key for key in blVerList">
+                </select>
+            </div>
+        </div>
+
+
+        <h4>Target Version</h4>
+        <div class="ui">
+            <div class="selectbox-wrapper" ng-show="true">
+                <select class="selectbox" name="blVerTgt" ng-model="$parent.blVerTgt" ng-options="key for key in blVerList | filter: key='!'+blVerSrc">
+                </select>
+            </div>
+        </div>
+
+    </div>
+    <div class="migrate-addon-popup-footer">
+        <div class="buttons">
+            <div class="text-button-wrapper">
+                <div class="text-button" ng-click="onMigBtnClicked(); $event.stopPropagation();">
+                    Migrate
+                </div>
+            </div>
+            <div class="text-button-wrapper">
+                <div class="remove text-button" ng-click="closeMigAddonPopup();">
+                    Close
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="migrate-addon-popup-background" class="migrate-addon-popup-background"></div>

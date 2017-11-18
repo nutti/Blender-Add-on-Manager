@@ -19,6 +19,11 @@
             <img src="../images/manage_custom_install_dir.png" onmouseover="this.src='../images/manage_custom_install_dir_hover.png'" onmouseout="this.src='../images/manage_custom_install_dir.png'" alt="Manage Custom Installation Target" />
         </div>
     </div>
+    <div class="menu-button-wrapper">
+        <div class="menu-button" id="migrate-addons" ng-click="!isOpsLocked && onMigAddonBtnClicked(); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
+            <img src="../images/migrate_addon.png" onmouseover="this.src='../images/migrate_addon_hover.png'" onmouseout="this.src='../images/migrate_addon.png'" alt="Migrate Addon among Different Blender Versions" />
+        </div>
+    </div>
 </div>
 <div class="search-panel">
     <div class="search">

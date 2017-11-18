@@ -47,14 +47,13 @@ app.controller('MainController', function ($scope, $timeout) {
         $('.app-body .menu').css('height', h);
     }
 
+    // for displaying scroll bar
     $(window).resize( () => {
         adjustBodyHeight();
     });
-
     $(window).ready( () => {
         adjustBodyHeight();
     });
-
 
     $scope.blVerList = blamOS.getBlenderVersions();
     $scope.blVerList.push('Custom');
@@ -70,7 +69,6 @@ app.controller('MainController', function ($scope, $timeout) {
 
     $scope.onAddonSelectorChanged = onAddonSelectorChanged;
 
-    //$scope.blVerList.push('Custom');
     $scope.addonCategories = [
         {id: 1, name: 'All', value: 'All'},
         {id: 2, name: '3D View', value: '3D View'},
@@ -253,6 +251,76 @@ app.controller('MainController', function ($scope, $timeout) {
     $scope.onMngCustomDirBtnClicked = () => {
         showCustomdirListPopup($scope);
     };
+
+    $scope.onMigAddonBtnClicked = () => {
+        showMigAddonPopup($scope);
+    };
+
+    $scope.onMigBtnClicked = () => {
+        let src = $scope.blVerSrc;
+        let tgt = $scope.blVerTgt;
+        migrateAddon(src, tgt)
+    };
+
+    function migrateAddon(verSrc, verTgt) {
+        // check installed add-on
+        let addonListSrc = {};
+        let addonListTgt = {};
+        for (let key in $scope.addonStatus) {
+            let addon = $scope.addonStatus[key];
+            if (addon['installed'] === undefined) { continue; }
+
+            if (addon['installed'][verSrc] !== undefined) {
+                addonListSrc[key] = addon['installed'][verSrc];
+            }
+
+            if (addon['installed'][verTgt] !== undefined) {
+                addonListTgt[key] = addon['installed'][verTgt];
+            }
+        }
+
+        // check add-ons will be migrated
+        let migrateAddons = {};
+        for (let key in addonListSrc) {
+            // skip add-on already installed
+            if (addonListTgt[key] !== undefined) { continue; }
+
+            migrateAddons[key] = {};
+            migrateAddons[key]['src'] = addonListSrc[key];
+            migrateAddons[key]['tgt'] = addonListTgt[key];
+        }
+
+        // migrate add-ons
+        for (let key in migrateAddons) {
+            let src = migrateAddons[key]['src'];
+            let tgt = migrateAddons[key]['tgt'];
+
+            if (tgt !== undefined) {
+                // delete add-on at first
+                let deleteFrom = tgt['src_path']
+                if (!deleteFrom) { throw new Error(deleteFrom + " is not found"); }
+                let result = del.sync([deleteFrom], {force: true});
+            }
+
+            // then, copy add-on
+            let tgtPath = blamOS.getAddonPath(verTgt);
+            if (tgtPath === null) {
+                // try to make add-on dir.
+                blamOS.createAddonDir(verTgt);
+                tgtPath = blamOS.getAddonPath(verTgt);
+                if (tgtPath == null) { throw new Error("Failed to make add-on directory"); }
+            }
+            let addonPath = tgtPath + blamOS.getPathSeparator() + key;
+            fs.mkdirSync(addonPath);
+            fsext.copySync(src['src_path'], addonPath);
+        }
+
+        updateInstalledAddonDB($scope);
+        onAddonSelectorChanged();
+        redrawApp($scope);
+
+        hideMigAddonPopup($scope);
+    }
 
 
     function onAddonSelectorChanged() {
@@ -558,6 +626,10 @@ app.controller('MainController', function ($scope, $timeout) {
 
     $scope.closeCustomDirListPopup = () => {
         hideCustomdirListPopup($scope);
+    };
+
+    $scope.closeMigAddonPopup = () => {
+        hideMigAddonPopup($scope);
     };
 
     async function updateGitHubAddonDB($scope) {
