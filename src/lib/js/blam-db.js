@@ -194,6 +194,16 @@ export default class BlamDB
         this['addonList'] = repoInfos;
     }
 
+    async isBlInfoValid(src_raw_url) {
+        var self_ = this;
+        let srcBody = await self_._getMainSrc(src_raw_url);
+        if (!srcBody) { return false; }
+        let info = self_._parseMainSrc(srcBody);
+        if (!info) { return false; }
+
+        return true;
+    }
+
     saveTo(file) {
         fs.writeFileSync(file, JSON.stringify(this['addonList'], null, '  '));
     }
@@ -213,7 +223,8 @@ export default class BlamDB
             // remove addons: release add-on should be removed
             let isAddonRelease = elm['src_dir'].match(/release\/scripts\/addons/);
             // remove addon_contrib: this is very large file
-            let isAddonContrib = elm['src_dir'].match(/script\/addons_contrib/);
+            let isAddonContrib = elm['src_dir'].match(/scripts\/addons_contrib/) ||
+                                 elm['src_dir'].match(/script\/addons_contrib/);
             // remove addon_extern: includes meta-androcto's add-on database. this is also very large file
             let isAddonExtern = elm['src_dir'].match(/scripts\/addons_extern/);
             // remove test addon: Nutti's test repository about sample add-on

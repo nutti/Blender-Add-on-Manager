@@ -131,7 +131,7 @@ To build and launch server for release. (Linux only)
 
 # install python dependencies
  $ mkdir venv
- $ virtualenv ./venv/
+ $ virtualenv venv
  $ source venv/bin/activate
  $ pip install -r requirements.txt
 
