@@ -34,16 +34,16 @@
     <div class="sort">
         <div class="sort-item">
             <div class="selectbox-wrapper" ng-show="true">
-                <select class="selectbox" name="addonOrderItemSelect" ng-change="onAddonSelectorChanged()" ng-model="$parent.addonOrderItemSelect" ng-options="order as order.name for order in addonOrderItemList">
+                <select class="selectbox" name="addonOrderItemSelect" ng-change="onAddonSelectorChanged()" ng-model="$parent.addonOrderItemSelect" ng-options="order as blamTranslate(order.name) for order in addonOrderItemList">
                 </select>
             </div>
         </div>
         <div class="sort-order">
             <div class="radiobutton">
                 <input type="radio" id="ascend" ng-model="$parent.addonOrder" value="ASCEND" ng-change="onAddonSelectorChanged()">
-                <label for="ascend">Ascend</label><br>
+                <label for="ascend">{{blamTranslate('Ascend');}}</label><br>
                 <input type="radio" id="descend" ng-model="$parent.addonOrder" value="DESCEND" ng-change="onAddonSelectorChanged()">
-                <label for="descend">Descend</label>
+                <label for="descend">{{blamTranslate('Descend');}}</label>
         </div>
         </div>
     </div>

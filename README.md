@@ -8,6 +8,7 @@ You can install/uninstall/update all add-on's released on GitHub with this appli
 
 |Version|Download URL|
 |---|---|
+|1.1|[Download](https://github.com/nutti/Blender-Add-on-Manager/releases/tag/v1.1)|
 |1.0|[Download](https://github.com/nutti/Blender-Add-on-Manager/releases/tag/v1.0)|
 |0.3|[Download](https://github.com/nutti/Blender-Add-on-Manager/releases/tag/v0.3)|
 |0.2|[Download](https://github.com/nutti/Blender-Add-on-Manager/releases/tag/v0.2)|

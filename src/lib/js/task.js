@@ -86,16 +86,16 @@ export default class TaskMgr
         return (progress + 1) * 1.0 / taskList[curTask]['items'].length;
     }
 
-    genProgressString() {
+    genProgressString(translator) {
         let curTask = this['curTask'];
         let taskList = this['taskList'];
 
         if (!taskList[curTask]) { return ""; }
         if (this.taskInProgress(curTask)) {
-            return this.getCurTaskItem() + " (" + this.getCurTaskProgress() + "/" + this.getTaskItemTotal() + ")";
+            return translator(this.getCurTaskItem()) + " (" + this.getCurTaskProgress() + "/" + this.getTaskItemTotal() + ")";
         }
         else if (this.taskCompleted(curTask)) {
-            return taskList[curTask]['completion'];
+            return translator(taskList[curTask]['completion']);
         }
 
         return "";

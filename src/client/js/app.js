@@ -18,6 +18,8 @@ import BlamFavorite from 'blam-favorite';
 const blamFavorite = new BlamFavorite();
 import BlamIgnore from 'blam-ignore';
 const blamIgnore = new BlamIgnore();
+import BlamTranslations from 'blam-translations';
+const blamTranslations = new BlamTranslations();
 import TaskMgr from 'task';
 const taskMgr = new TaskMgr();
 import Logger from 'logger';
@@ -59,6 +61,21 @@ app.controller('MainController', function ($scope, $timeout) {
     $scope.blVerList.push('Custom');
     $scope.blVerSelect = $scope.blVerList[0];
     $scope.showBlVerSelect = true;
+
+    $scope.langList = ['Language:'];
+    Array.prototype.push.apply($scope.langList, blamTranslations.supportedLanguages());
+    $scope.langSelect = 'Language:';
+    blamTranslations.setLanguage('Default (English)');
+
+    $scope.blamTranslate = (key) => {
+        return blamTranslations.translate(key);
+    };
+
+    $scope.onLangSelectorChanged = () => {
+        if ($scope.langSelect != 'Language:') {
+            blamTranslations.setLanguage($scope.langSelect);
+        }
+    };
 
     $scope.addonOrderItemList = [
         {name: 'Sort:', value: ''},

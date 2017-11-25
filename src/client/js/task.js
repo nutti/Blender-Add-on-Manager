@@ -16,7 +16,7 @@ function updateTask($scope)
 {
     setTimeout(function () {
         $scope.task = {
-            'progress': taskMgr.genProgressString(),
+            'progress': taskMgr.genProgressString($scope.blamTranslate),
             'progressRate': taskMgr.getCurTaskProgressRate()
         };
         $scope.$apply();
@@ -28,7 +28,7 @@ function completeTask($scope, addon)
     advanceProgressAndUpdate($scope);
     setTimeout(function () {
         $scope.task = {
-            'progress': taskMgr.genProgressString() + " '" + addon + "'",
+            'progress': taskMgr.genProgressString($scope.blamTranslate) + " '" + addon + "'",
             'progressRate': 1.0
         };
         $scope.$apply();
@@ -73,4 +73,3 @@ taskMgr.addItems(
     ]
 )
 taskMgr.setCompletionString('UPDATE', 'Updated Add-on');
-

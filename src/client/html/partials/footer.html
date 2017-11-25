@@ -1,8 +1,14 @@
+<div class="language-panel">
+    <div class="selectbox-wrapper" ng-show="true">
+        <select class="selectbox" name="langSelect" ng-change="onLangSelectorChanged()" ng-model="$parent.langSelect" ng-options="lang as lang for lang in langList">
+        </select>
+    </div>
+</div>
 <div class="progress-panel">
     <div class="progressbar">
         <div class="progressbar-complete" style="width: {{ task.progressRate * 100 }}%"></div>
     </div>
     <div class="progress">
-        {{ task.progress }}
+        {{ task.progress }} <font color="#000000">.</font>
     </div>
 </div>

@@ -1,20 +1,20 @@
 <div class="text-button-wrapper">
     <div class="link text-button" data-repo-index="{{i}}" ng-click="onLnBtnClicked($event); $event.stopPropagation();">
-        Link
+        {{blamTranslate('Link');}}
     </div>
 </div>
 <div class="text-button-wrapper" ng-if="getAddonStatus(key) === 'NOT_INSTALLED'">
     <div class="download text-button" data-repo-index="{{i}}" ng-click="!isOpsLocked && onDlBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
-        Install
+        {{blamTranslate('Install');}}
     </div>
 </div>
 <div class="text-button-wrapper" ng-if="getAddonStatus(key) === 'UPDATABLE'">
     <div class="update text-button" data-repo-index="{{i}}" ng-click="!isOpsLocked && onUpBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
-        Update
+        {{blamTranslate('Update');}}
     </div>
 </div>
 <div class="text-button-wrapper" ng-if="getAddonStatus(key) === 'INSTALLED' || getAddonStatus(key) === 'UPDATABLE'">
     <div class="remove text-button" data-repo-index="{{i}}" ng-click="!isOpsLocked && onRmBtnClicked($event); $event.stopPropagation();" ng-class="{locked: isOpsLocked}">
-        Remove
+        {{blamTranslate('Remove');}}
     </div>
 </div>
