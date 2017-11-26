@@ -53,13 +53,25 @@ config = JSON.parse(text);
 console.log("Parsed configuration file.");
 
 // cleanup link downed addons
-async function cleanupAddons() {
-    console.log("Start cleaning up ...");
+async function cleanupAddons(start, end) {
+    console.log("Start cleanup ...");
     console.log("Initializing DBWriter ...");
 
     await dbWriter.init();
+
+    let all = await dbWriter.countAll();
+    if (all < end) {
+        end = all;
+    }
+    let total = end - start + 1;
     let addonList = await dbWriter.findAll();
-    let count = 1;
+
+    let remain = total;
+
+    let deleted = 0;
+    let clean = 0;
+    let target = 0;
+    let i = 0;
 
     console.log("Finding all DB records ...");
 
@@ -67,8 +79,16 @@ async function cleanupAddons() {
         let name = addon['bl_info']['name'];
         let key = addon['key'];
 
-        console.log("[" + count + "] Checking '" + name + "' ...");
-        ++count;
+        // skip until start comes
+        ++i;
+        if (i < start) { continue; }
+
+        // all addons are checked
+        if (remain == 0) { break; }
+
+        console.log("[" + (target+1) + "/" + total + "] Checking '" + name + "' ...");
+        --remain;
+        ++target;
 
         // remove excluded add-ons
         console.log("  Check: Excluded add-ons");
@@ -77,18 +97,21 @@ async function cleanupAddons() {
         if (srcDir.match(/release\/scripts\/addons/)) {
             console.log("    '" + name + "' is release add-on. Trying to delete from DB ...");
             let ret = await dbWriter.remove({'key': key});
+            ++deleted;
             continue;
         }
         // contrib add-on
         else if (srcDir.match(/scripts\/addons_contrib/) || srcDir.match(/script\/addons_contrib/)) {
             console.log("    '" + name + "' is contrib add-on. Trying to delete from DB ...");
             let ret = await dbWriter.remove({'key': key});
+            ++deleted;
             continue;
         }
         // extern add-on (meta-androcto's add-on database)
         else if (srcDir.match(/scripts\/addons_extern/)) {
             console.log("    '" + name + "' is meta-androcto's add-on database. Trying to delete from DB ...");
             let ret = await dbWriter.remove({'key': key});
+            ++deleted;
             continue;
         }
         // test add-on (Nutti's test or sample add-on)
@@ -98,6 +121,7 @@ async function cleanupAddons() {
                  || srcDir.match(/gitbook-test/)) {
             console.log(    "'" + name + "' is Nutti's test or sample add-on. Trying to delete from DB ...");
             let ret = await dbWriter.remove({'key': key});
+            ++deleted;
             continue;
         }
 
@@ -108,6 +132,7 @@ async function cleanupAddons() {
         if (isDown) {
             console.log("    '" + name + "' (Repository URL: " + repoURL + ") is link down. Trying to delete from DB ...");
             let ret = await dbWriter.remove({'key': key});
+            ++deleted;
             continue;
         }
 
@@ -118,6 +143,7 @@ async function cleanupAddons() {
         if (isDown) {
             console.log("    '" + name + "' (Source URL: " + srcURL + ") is link down. Trying to delete from DB ...");
             let ret = await dbWriter.remove({'key': key});
+            ++deleted;
             continue;
         }
 
@@ -128,6 +154,7 @@ async function cleanupAddons() {
         if (isDown) {
             console.log("    '" + name + "' (Source Raw URL: " + srcRawURL + ") is link down. Trying to delete from DB ...");
             let ret = await dbWriter.remove({'key': key});
+            ++deleted;
             continue;
         }
         console.log("  Check: bl_info");
@@ -135,13 +162,22 @@ async function cleanupAddons() {
         if (!valid) {
             console.log("    '" + name + "' has an invalid bl_info. Trying to delete from DB ...");
             let ret = await dbWriter.remove({'key': key});
+            ++deleted;
             continue;
         }
+
+        ++clean;
     }
 
-    console.log("Finished cleaning up.");
+    console.log("Finished cleanup (total: " + total + ", target: " + target + ", clean: " + clean + ", deleted: " + deleted + ")");
 
     dbWriter.close();
 }
 
-cleanupAddons();
+let start = parseInt(process.argv[2], 10) || 1;
+let numProc = parseInt(process.argv[3], 10) || 10000;
+let end = start + numProc - 1;
+
+console.log("Cleanup target '" + start + "-" + end + "'");
+
+cleanupAddons(start, end);

@@ -140,9 +140,11 @@ To build and launch server for release. (Linux only)
  $ cd src/server
  $ sh run.sh
 # run Blender add-on information collector
- $ forever start build/server/js/bladdon_collector.js
+ $ cd ../..
+ $ cd build/server/js
+ $ forever start bladdon_collector.js
 # run Blender add-on information cleaner (optional)
- $ node build/server/js/bladdon_cleaner.js
+ $ node bladdon_cleaner.js
 ```
 
 
