@@ -17,8 +17,12 @@ You can install/uninstall/update all add-on's released on GitHub with this appli
 
 ## Support Languages
 
-**English** only.
+The list of languages supported by this application is shown below.
+If you want to support other languages, please send me translated strings.
 
+* English (Default)
+* Spanish
+  * Contributed by @Oxer
 
 ## Features
 
@@ -29,6 +33,8 @@ This application has features as follows.
   * Install add-on released on GitHub
   * Uninstall add-on which is already installed (only **External** support level)
   * Update add-on released on GitHub
+  * Favorite
+* Migrate add-ons among different Blender version
 
 
 ## Tutorials
@@ -48,9 +54,10 @@ See the link below for further details.
 
 |Version|Release Date|Change Log|
 |---|---|---|
-|1.0|2017.11.9|[1] Manage Custom Add-on Folder<br>[2] Ignore List<br>[3] Sorting Option in Add-on List<br>[4] Delete Add-on whose link is already broken automatically (server).<br>[5] Fix bug<br> - Failed to detect add-ons whose path contains "."|
-|0.3|2017.4.11|[1] Move config/DB file to user directory<br>[2] Improve server's stability<br>[3] Error popup<br>[4] Fix bug<br> - Failed to run application developed by unidentified developer on macOS<br> - Failed to load add-on at Blender installed by this application|
-|0.2|2017.4.2|[1] Support macOS<br>[2] Add features<br> - Link button to Add-on repository<br> - Case-insensitive search<br>[3]Fix bug<br> - Failed to install when ```__init__.py``` is located on the top directory|
+|1.1|2017.XX.X|[1] Add features<br> - Favorite<br> - Migrate Add-on among different Blender version<br>[2] Support Language<br> - Spanish<br>[3] Add scroll bar<br>[4] Update Add-on Database API (server)<br>[5] Improve deletion algorithm on the add-on DB cleaner (server)|
+|1.0|2017.11.9|[1] Add features<br> - Manage Custom Add-on Folder<br> - Ignore List<br>[2] Add Sorting Option in Add-on List<br>[3] Delete Add-on whose link is already broken automatically (server)<br>[4] Fix bug<br> - Failed to detect add-ons whose path contains "."|
+|0.3|2017.4.11|[1] Move config/DB file to user directory<br>[2] Improve server's stability<br>[3] Error popup<br>[4] Fix bug<br> - Failed to run application developed by unidentified developer on macOS<br> - Failed to load add-on installed by this application at Blender|
+|0.2|2017.4.2|[1] Support macOS<br>[2] Add feature<br> - Link button to Add-on repository<br>[3] Add Case-insensitive search<br>[4] Fix bug<br> - Failed to install when ```__init__.py``` is located on the top directory|
 |0.1|2017.3.25|First release for testing|
 
 
@@ -70,7 +77,7 @@ https://github.com/nutti/Blender-Add-on-Manager/tree/develop
 
 ### Testing
 
-only applicate is available.
+only application is available.
 
 #### Application
 
@@ -121,7 +128,7 @@ To build and launch server for release. (Linux only)
  $ bower install
  $ gulp
 
-# make configuration file for logging to GitHub
+# make configuration file for logging into GitHub
  $ vim config.json
 # {
 #     "github": {
@@ -146,8 +153,6 @@ To build and launch server for release. (Linux only)
 # run Blender add-on information cleaner (optional)
  $ node bladdon_cleaner.js
 ```
-
-
 
 
 ## License
