@@ -54,7 +54,7 @@ See the link below for further details.
 
 |Version|Release Date|Change Log|
 |---|---|---|
-|1.1|2017.XX.X|[1] Add features<br> - Favorite<br> - Migrate Add-on among different Blender version<br>[2] Support Language<br> - Spanish<br>[3] Add scroll bar<br>[4] Update Add-on Database API (server)<br>[5] Improve deletion algorithm on the add-on DB cleaner (server)|
+|1.1|2017.11.29|[1] Add features<br> - Favorite<br> - Migrate Add-on among different Blender version<br>[2] Support Language<br> - Spanish<br>[3] Add scroll bar<br>[4] Update Add-on Database API (server)<br>[5] Improve deletion algorithm on the add-on DB cleaner (server)|
 |1.0|2017.11.9|[1] Add features<br> - Manage Custom Add-on Folder<br> - Ignore List<br>[2] Add Sorting Option in Add-on List<br>[3] Delete Add-on whose link is already broken automatically (server)<br>[4] Fix bug<br> - Failed to detect add-ons whose path contains "."|
 |0.3|2017.4.11|[1] Move config/DB file to user directory<br>[2] Improve server's stability<br>[3] Error popup<br>[4] Fix bug<br> - Failed to run application developed by unidentified developer on macOS<br> - Failed to load add-on installed by this application at Blender|
 |0.2|2017.4.2|[1] Support macOS<br>[2] Add feature<br> - Link button to Add-on repository<br>[3] Add Case-insensitive search<br>[4] Fix bug<br> - Failed to install when ```__init__.py``` is located on the top directory|
@@ -109,6 +109,7 @@ To build and pack application for release.
 
 or
 
+ $ git-lfs pull
  $ node build_mac.js     # for macOS
 ```
 
