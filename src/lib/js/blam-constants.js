@@ -2,11 +2,16 @@
 
 import electron from 'electron';
 
+// for clients
 export const USER_DIR = electron.remote.app.getPath('userData');
+// for servers
+//export const USER_DIR = "/tmp";
 export const DB_DIR = USER_DIR + '/db';
 export const API_VERSION_FILE = DB_DIR + '/version';
 export const GITHUB_ADDONS_DB = DB_DIR + '/add-on_list.db';
 export const INSTALLED_ADDONS_DB = DB_DIR + '/installed_add-on_list.db';
+export const IGNORE_ADDONS_DB = DB_DIR + '/ignore_add-on_list.db';
+export const CUSTOM_DIR_DB = DB_DIR + '/custom_dir_list.db';
 export const CONFIG_DIR = USER_DIR + '/config';
 export const CONFIG_FILE_PATH = CONFIG_DIR + '/config.json';
 export const BL_INFO_UNDEF = "626c5f696e666f5f@UNDEF";

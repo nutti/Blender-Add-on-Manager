@@ -3,13 +3,12 @@
 This is the application to manage add-on released on GitHub.
 You can install/uninstall/update all add-on's released on GitHub with this application.
 
-*This tools is on testing now. Lots of bugs may be existed in this tools, and is fixing them in order*
-
 
 ## Download URL
 
 |Version|Download URL|
 |---|---|
+|1.0|[Download](https://github.com/nutti/Blender-Add-on-Manager/releases/tag/v1.0)|
 |0.3|[Download](https://github.com/nutti/Blender-Add-on-Manager/releases/tag/v0.3)|
 |0.2|[Download](https://github.com/nutti/Blender-Add-on-Manager/releases/tag/v0.2)|
 |0.1|[Download](https://github.com/nutti/Blender-Add-on-Manager/releases/tag/v0.1)|
@@ -24,7 +23,7 @@ You can install/uninstall/update all add-on's released on GitHub with this appli
 
 This application has features as follows.
 
-* Search add-ons released on GitHub (about 2,000 add-ons are avaliable)
+* Search add-ons released on GitHub (more than 2,000 add-ons are avaliable)
 * Manage add-ons
   * Install add-on released on GitHub
   * Uninstall add-on which is already installed (only **External** support level)
@@ -48,6 +47,7 @@ See the link below for further details.
 
 |Version|Release Date|Change Log|
 |---|---|---|
+|1.0|2017.X.XX|[1] Manage Custom Add-on Folder<br>[2] Ignore List<br>[3] Sorting Option in Add-on List<br>[4] Delete Add-on whose link is already broken automatically (server).<br>[5] Fix bug<br> - Failed to detect add-ons whose path contains "."|
 |0.3|2017.4.11|[1] Move config/DB file to user directory<br>[2] Improve server's stability<br>[3] Error popup<br>[4] Fix bug<br> - Failed to run application developed by unidentified developer on macOS<br> - Failed to load add-on at Blender installed by this application|
 |0.2|2017.4.2|[1] Support macOS<br>[2] Add features<br> - Link button to Add-on repository<br> - Case-insensitive search<br>[3]Fix bug<br> - Failed to install when ```__init__.py``` is located on the top directory|
 |0.1|2017.3.25|First release for testing|

@@ -30,13 +30,128 @@
             padding-left: 6rem;
         }
         .close-button-wrapper {
+            @include text-button(10rem);
             padding-right: 3rem;
             position: absolute;
             top: $popup-height - 70px;
-            left: $popup-width - 150px;
+            left: $popup-width - 200px;
         }
     }
     .error-popup-background {
+        display: none;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        opacity: 0.7;
+        background-color: #000000;
+        z-index: 100;
+    }
+    .ignore-list-popup {
+        display: none;
+        width: $popup-width;
+        height: $popup-height;
+        margin-left: - $popup-width / 2;
+        margin-top: - $popup-height / 2;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        background-color: #252525;
+        z-index: 101;
+        box-shadow: 0px 0px 20px 20px rgba(0,0,0,1.0);
+        .ignore-list-popup-header {
+            h3 {
+                font-size: 2rem;
+                padding-left: 1rem;
+                margin: 1.0rem;
+            }
+        }
+        .ignore-list-popup-body {
+            color: $body-color - #303030;
+            padding-left: 6rem;
+            padding-top: 1rem;
+            h4 {
+                color: $body-color - #202020;
+                font-size: 1.3rem;
+                margin: 1.0rem;
+            }
+            .ui {
+                @include selectbox(30rem);
+                @include text-button(15rem);
+                display: flex;
+                padding-left: 2rem;
+            }
+        }
+        .close-button-wrapper {
+            @include text-button(10rem);
+            padding-right: 3rem;
+            position: absolute;
+            top: $popup-height - 70px;
+            left: $popup-width - 200px;
+        }
+    }
+    .ignore-list-popup-background {
+        display: none;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        opacity: 0.7;
+        background-color: #000000;
+        z-index: 100;
+    }
+    .customdir-list-popup {
+        display: none;
+        width: $popup-width;
+        height: $popup-height;
+        margin-left: - $popup-width / 2;
+        margin-top: - $popup-height / 2;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        background-color: #252525;
+        z-index: 101;
+        box-shadow: 0px 0px 20px 20px rgba(0,0,0,1.0);
+        .customdir-list-popup-header {
+            h3 {
+                font-size: 2rem;
+                padding-left: 1rem;
+                margin: 1.0rem;
+            }
+        }
+        .customdir-list-popup-body {
+            color: $body-color - #303030;
+            padding-left: 6rem;
+            padding-top: 1rem;
+            h4 {
+                color: $body-color - #202020;
+                font-size: 1.3rem;
+                margin: 1.0rem;
+            }
+            .ui {
+                @include selectbox(41rem);
+                @include text-box(40rem);
+                display: flex;
+                padding-left: 2rem;
+                padding-bottom: 0.5rem;
+                .buttons {
+                    position: relative;
+                    @include text-button(7rem);
+                    left: -1rem;
+                }
+            }
+        }
+        .close-button-wrapper {
+            @include text-button(10rem);
+            padding-right: 3rem;
+            position: absolute;
+            top: $popup-height - 70px;
+            left: $popup-width - 200px;
+        }
+    }
+    .customdir-list-popup-background {
         display: none;
         width: 100%;
         height: 100%;

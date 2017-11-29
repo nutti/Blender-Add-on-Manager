@@ -1,5 +1,6 @@
 .app-body {
     .menu {
+        @include selectbox(80%);
         float: left;
         width: $menu-width;
         max-width: $menu-width;
@@ -12,6 +13,9 @@
             font-size: 1.2rem;
             font-color: $body-color + #202020;
             font-weight: bold;
+        }
+        .blender-version {
+            @include margin-center();
         }
         .menu-selector {
             margin-top: 0.5rem;

@@ -18,7 +18,7 @@ let nPagesPerCmd = 5;
 let minFileSize = 0;
 let maxFileSize = 100 * 1024 * 1024;
 let nFileSizePerCmd = 500;
-let waitInterval = 40 * 1000;   // 10sec
+let waitInterval = 40 * 1000;   // 40sec
 
 let config;
 
@@ -55,13 +55,14 @@ function getDate() {
         + "]";
 }
 
-function collectBlAddon(startPage, endPage, startFileSize, endFileSize) {
+async function collectBlAddon(startPage, endPage, startFileSize, endFileSize) {
     try {
+        let ret;
+
         blamDB.setPages(startPage, endPage);
         blamDB.setFileSizes(startFileSize, endFileSize);
-        blamDB.buildAddonDB( () => {
-            blamDB.writeDB(dbWriter);
-        });
+        ret = await blamDB.buildFromGitHub();
+        ret = await blamDB.writeToDB(dbWriter);
     }
     catch (e) {
         console.log(e);
@@ -100,6 +101,6 @@ console.log("Parsing configuration file ...");
 config = JSON.parse(text);
 console.log("Parsed configuration file ...");
 
-blamDB.init(config, minPage, minPage, minFileSize, minFileSize);
+blamDB.configure(config, minPage, minPage, minFileSize, minFileSize);
 
 execCmd(minFileSize, minPage);

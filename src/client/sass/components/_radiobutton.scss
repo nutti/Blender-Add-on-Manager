@@ -1,0 +1,37 @@
+@mixin radiobutton () {
+    .radiobutton {
+        input {
+            display: none;
+        }
+        label {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            border-radius: 2px;
+            text-align: left;
+            left: 20px;
+            &:before {
+                position: absolute;
+                content: "";
+                top: 50%;
+                border-radius: 50%;
+                background: #bdc3c7;
+                width: 12px;
+                height: 12px;
+                top: 3px;
+                left: -20px;
+            }
+        }
+        input[type="radio"]:checked + label:after {
+            position: absolute;
+            content: "";
+            top: 50%;
+            border-radius: 50%;
+            background: #879c18;
+            width: 8px;
+            height: 8px;
+            left: -18px;
+            top: 5px;
+        }
+    }
+}

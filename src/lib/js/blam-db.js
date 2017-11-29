@@ -18,23 +18,21 @@ export default class BlamDB
 {
     constructor() {
         this['config'] = null;
-        this['addonDB'] = {};
+        this['addonList'] = {};
         this['startPage'] = 0;
         this['endPage'] = 1;
         this['minFileSize'] = 0;
         this['maxFileSize'] = 1000;
-        this['db'] = null;
     }
 
-    // initialize
-    init(config, startPage, endPage, minFileSize, maxFileSize) {
+    // configure
+    configure(config, startPage, endPage, minFileSize, maxFileSize) {
         if (config) { this['config'] = config; }
         if (startPage) { this['startPage'] = startPage; }
         if (endPage) { this['endPage'] = endPage; }
         if (minFileSize) { this['minFileSize'] = minFileSize; }
         if (maxFileSize) { this['maxFileSize'] = maxFileSize; }
-        this['addonDB'] = {};
-        this['db'] = null;
+        this['addonList'] = {};
     }
 
     setPages(startPage, endPage) {
@@ -47,15 +45,12 @@ export default class BlamDB
         if (maxFileSize) { this['maxFileSize'] = maxFileSize; }
     }
 
-    fini() {
-    }
-
     // login to GitHub
     _loginGitHub(result) {
         let self_ = this;
         return new Promise( (resolve, reject) => {
             // check login information
-            if (!self_._isGitHubConfigValid(self_.config)) { throw new Error("Invalid GitHub configuration"); }
+            if (!Utils.isGitHubConfigValid(self_.config)) { throw new Error("Invalid GitHub configuration"); }
             let loginInfo = {
                 login: self_.config.github.username,
                 password: self_.config.github.password
@@ -165,7 +160,7 @@ export default class BlamDB
         return Blam.validateBlInfo(info);
     }
 
-    async buildAddonDB(cb) {
+    async buildFromGitHub() {
         var self_ = this;
         let fetched = await client.fetch('https://github.com/login');
         let login = await self_._loginGitHub(fetched);
@@ -196,41 +191,14 @@ export default class BlamDB
             delete repoInfos[i]['main_src_body'];
         }
 
-        this['addonDB'] = repoInfos;
-
-        cb();
+        this['addonList'] = repoInfos;
     }
 
-    // check if GitHub config is valid
-    _isGitHubConfigValid(config) {
-        if (!config) { return false; }
-        if (!config.github) { return false; }
-        if (!config.github.username) { return false; }
-        if (!config.github.password) { return false; }
-
-        return true;
+    saveTo(file) {
+        fs.writeFileSync(file, JSON.stringify(this['addonList'], null, '  '));
     }
 
-    writeDBFile(filename, overwrite) {
-        if (!this['db']) {
-            throw new Error("Database is not built");
-        }
-
-        if (Utils.isExistFile(filename)) {
-            if (overwrite) {
-                fs.unlink(filename, (err) => {
-                    logger.category('lib').info("Removed old add-on database file");
-                });
-            }
-            else {
-                throw new Error(filename + "is already exists");
-            }
-        }
-
-        fs.appendFile(filename, JSON.stringify(repoInfoList, null, '  '));
-    }
-
-    async writeDB(db) {
+    async writeToDB(db) {
         let dbWriter = db;
         if (!dbWriter) { throw new Error("DB is not registered"); }
         if (!dbWriter.connected()) {
@@ -238,7 +206,7 @@ export default class BlamDB
             return;
         }
 
-        let repoInfoList = this['addonDB'];
+        let repoInfoList = this['addonList'];
 
         // remove improper add-ons
         repoInfoList = repoInfoList.filter( (elm) => {
@@ -320,15 +288,17 @@ export default class BlamDB
     }
 
     // read local DB file and return data formatted in JSON
-    readDBFile(file) {
+    loadFrom(file) {
         if (!Utils.isExistFile(file)) { throw new Error('Not found DB file...'); }
-
-        logger.category('lib').info("Reading DB file...");
 
         let data = fs.readFileSync(file, 'utf8');
         let json = JSON.parse(data);
 
-        return json;
+        this['addonList'] = json || [];
+    }
+
+    getAddonList() {
+        return this['addonList'];
     }
 
     // make API status file
@@ -374,29 +344,23 @@ export default class BlamDB
     }
 
     // fetch add-on information from server, and save to local DB file
-    fetchFromDBServer(filename) {
-        let self_ = this;
+    fetchFromServer(apiURLs, proxyURL) {
+
         return new Promise( (resolve) => {
-            let apiURLs = Utils.getAPIURL(self_.config);
-            if (!apiURLs) { throw new Error("Invalid API URL"); }
-            // if there is DB file on local, delete it
-            if (Utils.isExistFile(filename)) {
-                fs.unlinkSync(filename);
-                logger.category('lib').info("Removed old add-on database file");
-            }
 
             // request callback
             let onRequest = (err, res, body) => {
                 if (err) { throw new Error("Failed to fetch data from API.\n" + JSON.stringify(err)); }
                 if (res.statusCode != 200) { throw new Error("Failed to fetch data from API. (status=" + res.statusCode + ")"); }
 
-                fs.appendFileSync(filename, JSON.stringify(body, null, '  '));
-                logger.category('lib').info("Fetched data is saved to " + filename);
+                this['addonList'] = body;
+
+                logger.category('lib').info("Fetched data");
                 resolve();
             };
 
             // send request to api server
-            let proxyURL = Utils.getProxyURL(self_.config);
+            
             if (proxyURL) {
                 logger.category('lib').info("Use proxy server");
                 request({
