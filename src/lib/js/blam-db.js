@@ -194,6 +194,16 @@ export default class BlamDB
         this['addonList'] = repoInfos;
     }
 
+    async isBlInfoValid(src_raw_url) {
+        var self_ = this;
+        let srcBody = await self_._getMainSrc(src_raw_url);
+        if (!srcBody) { return false; }
+        let info = self_._parseMainSrc(srcBody);
+        if (!info) { return false; }
+
+        return true;
+    }
+
     saveTo(file) {
         fs.writeFileSync(file, JSON.stringify(this['addonList'], null, '  '));
     }
@@ -213,7 +223,8 @@ export default class BlamDB
             // remove addons: release add-on should be removed
             let isAddonRelease = elm['src_dir'].match(/release\/scripts\/addons/);
             // remove addon_contrib: this is very large file
-            let isAddonContrib = elm['src_dir'].match(/script\/addons_contrib/);
+            let isAddonContrib = elm['src_dir'].match(/scripts\/addons_contrib/) ||
+                                 elm['src_dir'].match(/script\/addons_contrib/);
             // remove addon_extern: includes meta-androcto's add-on database. this is also very large file
             let isAddonExtern = elm['src_dir'].match(/scripts\/addons_extern/);
             // remove test addon: Nutti's test repository about sample add-on
@@ -301,48 +312,6 @@ export default class BlamDB
         return this['addonList'];
     }
 
-    // make API status file
-    makeAPIStatusFile(filename) {
-        let self_ = this;
-        return new Promise( (resolve) => {
-            let apiURLs = Utils.getAPIURL(self_.config);
-            if (!apiURLs) { throw new Error("Invalid API URL"); }
-            // if there is DB file on local, delete it
-            if (Utils.isExistFile(filename)) {
-                fs.unlinkSync(filename);
-                logger.category('lib').info("Removed old API status file");
-            }
-            // request callback
-            let onRequest = (err, res, body) => {
-                if (err) { throw new Error("Failed to fetch data from API.\n" + JSON.stringify(err)); }
-                if (res.statusCode != 200) { throw new Error("Failed to fetch data from API. (status=" + res.statusCode + ")"); }
-
-                fs.appendFileSync(filename, JSON.stringify(body, null, '  '));
-                logger.category('lib').info("API status data is saved to " + filename);
-                resolve();
-            };
-
-            // send request to api server
-            let proxyURL = Utils.getProxyURL(self_.config);
-            if (proxyURL) {
-                logger.category('lib').info("Use proxy server");
-                request({
-                    tunnel: true,
-                    url: apiURLs['version'],
-                    json: true,
-                    proxy: proxyURL
-                }, onRequest);
-            }
-            else {
-                logger.category('lib').info("Not use proxy server");
-                request({
-                    url: apiURLs['version'],
-                    json: true,
-                }, onRequest);
-            }
-        });
-    }
-
     // fetch add-on information from server, and save to local DB file
     fetchFromServer(apiURLs, proxyURL) {
 
@@ -360,7 +329,6 @@ export default class BlamDB
             };
 
             // send request to api server
-            
             if (proxyURL) {
                 logger.category('lib').info("Use proxy server");
                 request({

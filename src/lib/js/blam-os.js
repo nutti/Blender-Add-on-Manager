@@ -144,7 +144,7 @@ export default class BlamOS
     getOSType() {
         return this['osInfo']['type'];
     }
-    
+
     getPathSeparator() {
         return this['pathSeparator'];
     }
@@ -157,6 +157,7 @@ export default class BlamOS
     getBlenderVersions() {
         return this['blVers'];
     }
+
 
     getAddonPath(blVer) {
         let osType = this.getOSType();

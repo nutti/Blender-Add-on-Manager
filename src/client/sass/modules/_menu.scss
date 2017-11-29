@@ -5,8 +5,8 @@
         width: $menu-width;
         max-width: $menu-width;
         background-color: $menu-bgcolor;
-        padding-top: $header-height;
-        padding-bottom: $footer-height;
+        margin-top: $header-height;
+        margin-bottom: $footer-height;
         .menu-item-title {
             text-align: center;
             padding: 1.0rem;

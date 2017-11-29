@@ -2,6 +2,9 @@
 
 import electron from 'electron';
 
+// API Version
+export const API_VERSION = "1.0.0";
+
 // for clients
 export const USER_DIR = electron.remote.app.getPath('userData');
 // for servers
@@ -10,6 +13,7 @@ export const DB_DIR = USER_DIR + '/db';
 export const API_VERSION_FILE = DB_DIR + '/version';
 export const GITHUB_ADDONS_DB = DB_DIR + '/add-on_list.db';
 export const INSTALLED_ADDONS_DB = DB_DIR + '/installed_add-on_list.db';
+export const FAVORITE_ADDONS_DB = DB_DIR + '/favorite_add-on_list.db';
 export const IGNORE_ADDONS_DB = DB_DIR + '/ignore_add-on_list.db';
 export const CUSTOM_DIR_DB = DB_DIR + '/custom_dir_list.db';
 export const CONFIG_DIR = USER_DIR + '/config';
@@ -27,16 +31,17 @@ export const MAX_LOG_SIZE = 3 * 1024 * 1024;       // 3MiB
 export const MAX_BACKUPS = 3;
 export const LOG_DIR = USER_DIR + '/logs';
 
-export const CONFIG_FILE_INIT =
+export const CONFIG_FILE_INIT=
 `{
     "db": {
         "server": "colorful-pico.net",
         "port": "5000",
         "api": "/api/bl-addon-db",
+        "version": "${API_VERSION}",
         "endpoint": {
             "addon-list": "/addon-list",
             "addon-total": "/addon-total",
-            "version": "/version",
+            "versions": "/versions",
             "services": "/services"
         }
     }

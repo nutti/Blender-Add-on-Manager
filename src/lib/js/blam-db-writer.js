@@ -70,6 +70,19 @@ export default class DBWriter
         });
     }
 
+    countAll() {
+        return new Promise( (resolve) => {
+            if (!this['collection']) { throw new Error("Collection is null"); }
+
+            this['collection'].count({}, (err, count) => {
+                if (err) {
+                    throw new Error("Failed to process countAll");
+                }
+                resolve(count);
+            });
+        });
+    }
+
     findOne(key) {
         return new Promise( (resolve) => {
             if (!this['collection']) { throw new Error("Collection is null"); }

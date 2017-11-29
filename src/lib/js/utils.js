@@ -84,9 +84,10 @@ export function isAPIConfigValid(config) {
     if (!config['db']['server']) { return false; }
     if (!config['db']['port']) { return false; }
     if (!config['db']['api']) { return false; }
+    if (!config['db']['version']) { return false; }
     if (!config['db']['endpoint']) { return false; }
     if (!config['db']['endpoint']['addon-list']) { return false; }
-    if (!config['db']['endpoint']['version']) { return false; }
+    if (!config['db']['endpoint']['versions']) { return false; }
 
     return true;
 }
@@ -99,11 +100,12 @@ export function getAPIURL(config) {
         + config['db']['server']
         + ':'
         + config['db']['port']
-        + config['db']['api'];
+        + config['db']['api']
+        + '/v' + config['db']['version'];
 
     let apis = {
         'list_github': base + config['db']['endpoint']['addon-list'] + '/github',
-        'version': base + config['db']['endpoint']['version'],
+        'versions': base + config['db']['endpoint']['versions'],
     };
 
     return apis;
@@ -194,4 +196,3 @@ export function getRemoteFileSize(config, url) {
         });
     });
 }
-

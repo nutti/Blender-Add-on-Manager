@@ -5,18 +5,34 @@
         width: 100%;
         height: $footer-height;
         background-color: $footer-bgcolor;
+        .language-panel {
+            @include selectbox(80%);
+            width: 20%;
+            padding-left: 0.5rem;
+            display: inline-block;
+        }
         .progress-panel {
             width: 70%;
-            height: $footer-height;
+            height: $footer-height - 0.8rem;
             margin-left: auto;
             margin-right: auto;
             padding-top: 0.8rem;
+            display: inline-block;
             .progress {
                 width: 80%;
                 margin-left: auto;
                 margin-right: auto;
                 text-align: center;
             }
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        ::-webkit-scrollbar-thumb {
+            display: none;
+        }
+        ::-webkit-scrollbar-corner {
+            display: none;
         }
     }
 }

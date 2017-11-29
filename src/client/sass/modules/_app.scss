@@ -1,6 +1,6 @@
 .frame {
     @include box-sizing(border-box);
-    @include scrollbar();
+    @include scrollbar(3px);
     height: 100%;
     overflow: auto;
 }

@@ -1,7 +1,8 @@
 'use strict';
 
 import {
-        DB_DIR, GITHUB_ADDONS_DB, INSTALLED_ADDONS_DB, IGNORE_ADDONS_DB, CUSTOM_DIR_DB
+        DB_DIR, GITHUB_ADDONS_DB, INSTALLED_ADDONS_DB, FAVORITE_ADDONS_DB,
+        IGNORE_ADDONS_DB, CUSTOM_DIR_DB
 } from 'blam-constants';
 
 
@@ -17,6 +18,12 @@ function loadInstalledAddonsDB() {
 
     logger.category('app').info("Loading installed add-ons DB file ...");
     blamLocal.loadFrom(INSTALLED_ADDONS_DB);
+}
+
+function loadFavoriteAddonDB() {
+    if (!Utils.isExistFile(FAVORITE_ADDONS_DB)) { return; }
+    logger.category('app').info("Loading favorite add-ons DB file ...");
+    blamFavorite.loadFrom(FAVORITE_ADDONS_DB);
 }
 
 function loadIgnoreAddonDB() {
@@ -43,5 +50,6 @@ function updateInstalledAddonDB($scope) {
     loadInstalledAddonsDB();
     $scope.addonStatus = Blam.updateAddonStatus(blamDB.getAddonList(),
                                                 blamLocal.getAddonList(),
-                                                $scope.blVerList);
+                                                $scope.blVerList,
+                                                blamFavorite.getList());
 }

@@ -52,3 +52,14 @@ function hideCustomdirListPopup($scope) {
     $('.customdir-list-popup-background').css('display', 'none');
 }
 
+// show migrate-adddon popup
+function showMigAddonPopup($scope) {
+    $('.migrate-addon-popup').css('display', 'block');
+    $('.migrate-addon-popup-background').css('display', 'block');
+}
+
+// close migrate-addon popup
+function hideMigAddonPopup($scope) {
+    $('.migrate-addon-popup').css('display', 'none');
+    $('.migrate-addon-popup-background').css('display', 'none');
+}

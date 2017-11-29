@@ -14,8 +14,12 @@ import BlamCustomDir from 'blam-custom-dir';
 const blamCustomDir = new BlamCustomDir();
 import BlamLocal from 'blam-local';
 const blamLocal = new BlamLocal(blamCustomDir, blamOS);
+import BlamFavorite from 'blam-favorite';
+const blamFavorite = new BlamFavorite();
 import BlamIgnore from 'blam-ignore';
 const blamIgnore = new BlamIgnore();
+import BlamTranslations from 'blam-translations';
+const blamTranslations = new BlamTranslations();
 import TaskMgr from 'task';
 const taskMgr = new TaskMgr();
 import Logger from 'logger';
@@ -23,24 +27,55 @@ const logger = new Logger();
 import * as Blam from 'blam';
 
 import {
-        DB_DIR, API_VERSION_FILE, GITHUB_ADDONS_DB, INSTALLED_ADDONS_DB, IGNORE_ADDONS_DB,
-        CUSTOM_DIR_DB, CONFIG_DIR, CONFIG_FILE_PATH, BL_INFO_UNDEF, CONFIG_FILE_INIT
+        DB_DIR, API_VERSION_FILE, GITHUB_ADDONS_DB, INSTALLED_ADDONS_DB,
+        FAVORITE_ADDONS_DB, IGNORE_ADDONS_DB, CUSTOM_DIR_DB, CONFIG_DIR,
+        CONFIG_FILE_PATH, BL_INFO_UNDEF, CONFIG_FILE_INIT
 } from 'blam-constants';
 
 
 var config = null;
 var app = angular.module('blAddonMgr', [])
 
-
 app.controller('MainController', function ($scope, $timeout) {
 
     var main = this;
     main.repoList = [];
 
+    function adjustBodyHeight() {
+        let hh = $('.app-body .header').outerHeight();
+        let fh = $('.app-body .footer').outerHeight();
+        let h = $(window).height() - hh - fh;
+        $('.app-body .container').css('height', h);
+        $('.app-body .menu').css('height', h);
+    }
+
+    // for displaying scroll bar
+    $(window).resize( () => {
+        adjustBodyHeight();
+    });
+    $(window).ready( () => {
+        adjustBodyHeight();
+    });
+
     $scope.blVerList = blamOS.getBlenderVersions();
     $scope.blVerList.push('Custom');
     $scope.blVerSelect = $scope.blVerList[0];
     $scope.showBlVerSelect = true;
+
+    $scope.langList = ['Language:'];
+    Array.prototype.push.apply($scope.langList, blamTranslations.supportedLanguages());
+    $scope.langSelect = 'Language:';
+    blamTranslations.setLanguage('Default (English)');
+
+    $scope.blamTranslate = (key) => {
+        return blamTranslations.translate(key);
+    };
+
+    $scope.onLangSelectorChanged = () => {
+        if ($scope.langSelect != 'Language:') {
+            blamTranslations.setLanguage($scope.langSelect);
+        }
+    };
 
     $scope.addonOrderItemList = [
         {name: 'Sort:', value: ''},
@@ -51,7 +86,6 @@ app.controller('MainController', function ($scope, $timeout) {
 
     $scope.onAddonSelectorChanged = onAddonSelectorChanged;
 
-    //$scope.blVerList.push('Custom');
     $scope.addonCategories = [
         {id: 1, name: 'All', value: 'All'},
         {id: 2, name: '3D View', value: '3D View'},
@@ -76,7 +110,8 @@ app.controller('MainController', function ($scope, $timeout) {
     $scope.addonLists = [
         {id: 1, name: 'Installed', value: 'installed'},
         {id: 2, name: 'GitHub', value: 'github'},
-        {id: 3, name: 'Update', value: 'update'}
+        {id: 3, name: 'Update', value: 'update'},
+        {id: 4, name: 'Favorite', value: 'favorite'},
     ];
     $scope.customDirItemList = [];
     $scope.addonListActive = 1;
@@ -182,6 +217,10 @@ app.controller('MainController', function ($scope, $timeout) {
         return $scope.addonStatus[key]['status'][$scope.targetDir];
     };
 
+    $scope.isAddonFavorited = (key) => {
+        return $scope.addonStatus[key]['favorited'];
+    };
+
     $scope.onOpenCustomDirBtnClicked = () => {
         const remote = electron.remote;
         const dialog = remote.dialog;
@@ -229,6 +268,76 @@ app.controller('MainController', function ($scope, $timeout) {
     $scope.onMngCustomDirBtnClicked = () => {
         showCustomdirListPopup($scope);
     };
+
+    $scope.onMigAddonBtnClicked = () => {
+        showMigAddonPopup($scope);
+    };
+
+    $scope.onMigBtnClicked = () => {
+        let src = $scope.blVerSrc;
+        let tgt = $scope.blVerTgt;
+        migrateAddon(src, tgt)
+    };
+
+    function migrateAddon(verSrc, verTgt) {
+        // check installed add-on
+        let addonListSrc = {};
+        let addonListTgt = {};
+        for (let key in $scope.addonStatus) {
+            let addon = $scope.addonStatus[key];
+            if (addon['installed'] === undefined) { continue; }
+
+            if (addon['installed'][verSrc] !== undefined) {
+                addonListSrc[key] = addon['installed'][verSrc];
+            }
+
+            if (addon['installed'][verTgt] !== undefined) {
+                addonListTgt[key] = addon['installed'][verTgt];
+            }
+        }
+
+        // check add-ons will be migrated
+        let migrateAddons = {};
+        for (let key in addonListSrc) {
+            // skip add-on already installed
+            if (addonListTgt[key] !== undefined) { continue; }
+
+            migrateAddons[key] = {};
+            migrateAddons[key]['src'] = addonListSrc[key];
+            migrateAddons[key]['tgt'] = addonListTgt[key];
+        }
+
+        // migrate add-ons
+        for (let key in migrateAddons) {
+            let src = migrateAddons[key]['src'];
+            let tgt = migrateAddons[key]['tgt'];
+
+            if (tgt !== undefined) {
+                // delete add-on at first
+                let deleteFrom = tgt['src_path']
+                if (!deleteFrom) { throw new Error(deleteFrom + " is not found"); }
+                let result = del.sync([deleteFrom], {force: true});
+            }
+
+            // then, copy add-on
+            let tgtPath = blamOS.getAddonPath(verTgt);
+            if (tgtPath === null) {
+                // try to make add-on dir.
+                blamOS.createAddonDir(verTgt);
+                tgtPath = blamOS.getAddonPath(verTgt);
+                if (tgtPath == null) { throw new Error("Failed to make add-on directory"); }
+            }
+            let addonPath = tgtPath + blamOS.getPathSeparator() + key;
+            fs.mkdirSync(addonPath);
+            fsext.copySync(src['src_path'], addonPath);
+        }
+
+        updateInstalledAddonDB($scope);
+        onAddonSelectorChanged();
+        redrawApp($scope);
+
+        hideMigAddonPopup($scope);
+    }
 
 
     function onAddonSelectorChanged() {
@@ -318,6 +427,38 @@ app.controller('MainController', function ($scope, $timeout) {
                 }
                 $scope.addonInfoTpl = 'partials/addon-info/github.html';
                 break;
+            case 'favorite':
+                logger.category('app').info("Show Favorited add-on list");
+                if ($scope.addonStatus) {
+                    let addon_keys = Blam.filterAddons(
+                        $scope.addonStatus,
+                        'github',
+                        ['INSTALLED', 'NOT_INSTALLED', 'UPDATABLE'],
+                        $scope.targetDir,
+                        activeCategory,
+                        searchStr,
+                        blamIgnore.getList());
+                    // filtered by favorited
+                    let favList = blamFavorite.getList();
+                    addon_keys = addon_keys.filter( (key) => {
+                        for (let i in favList) {
+                            let fav = favList[i];
+                            if (fav === key) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                    addons = Blam.sortAddons(
+                        $scope.addonStatus,
+                        addon_keys,
+                        'github',
+                        $scope.targetDir,
+                        $scope.addonOrderItemSelect.value,
+                        $scope.addonOrder);
+                }
+                $scope.addonInfoTpl = 'partials/addon-info/github.html';
+                break;
             default:
                 return;
         }
@@ -399,6 +540,27 @@ app.controller('MainController', function ($scope, $timeout) {
             });
         }
 
+        function onFavBtnClicked($event) {
+            try {
+                let repoIndex = $($event.target).data('repo-index');
+                let key = main.repoList[repoIndex];
+                if (!blamFavorite.favorited(key)) {
+                    blamFavorite.addItem(key);
+                }
+                else {
+                    blamFavorite.removeItem(key);
+                }
+                blamFavorite.saveTo(FAVORITE_ADDONS_DB);
+                updateInstalledAddonDB($scope);
+                redrawApp($scope);
+            }
+            catch (e) {
+                handleException($scope, e);
+            }
+        }
+
+        // "Fav" button
+        $scope.onFavBtnClicked = onFavBtnClicked;
         // "Link" button
         $scope.onLnBtnClicked = onLnBtnClicked;
         // "Download" button
@@ -443,7 +605,6 @@ app.controller('MainController', function ($scope, $timeout) {
 
             if (!apiURLs) { throw new Error("Invalid API URL"); }
 
-            const version = await blamDB.makeAPIStatusFile(API_VERSION_FILE);
             const fetch = await blamDB.fetchFromServer(apiURLs, proxyURL);
 
             blamDB.saveTo(GITHUB_ADDONS_DB);
@@ -451,11 +612,13 @@ app.controller('MainController', function ($scope, $timeout) {
 
         loadGitHubAddonDB();
         loadInstalledAddonsDB();
+        loadFavoriteAddonDB();
         loadIgnoreAddonDB();
         loadCustomDirDB();
         $scope.addonStatus = Blam.updateAddonStatus(blamDB.getAddonList(),
                                                     blamLocal.getAddonList(),
-                                                    $scope.blVerList);
+                                                    $scope.blVerList,
+                                                    blamFavorite.getList());
 
         updateIgnoreList($scope);
         updateCustomDirList($scope);
@@ -481,6 +644,10 @@ app.controller('MainController', function ($scope, $timeout) {
         hideCustomdirListPopup($scope);
     };
 
+    $scope.closeMigAddonPopup = () => {
+        hideMigAddonPopup($scope);
+    };
+
     async function updateGitHubAddonDB($scope) {
         let proxyURL = Utils.getProxyURL(config);
         let apiURLs = Utils.getAPIURL(config);
@@ -496,7 +663,6 @@ app.controller('MainController', function ($scope, $timeout) {
         }
 
         // update DB files
-        const version = await blamDB.makeAPIStatusFile(API_VERSION_FILE);
         const fetch = await blamDB.fetchFromServer(apiURLs, proxyURL);
 
         blamDB.saveTo(GITHUB_ADDONS_DB);
@@ -504,7 +670,8 @@ app.controller('MainController', function ($scope, $timeout) {
         // update app's internal DB data
         $scope.addonStatus = Blam.updateAddonStatus(blamDB.getAddonList(),
                                                     blamLocal.getAddonList(),
-                                                    $scope.blVerList);
+                                                    $scope.blVerList,
+                                                    blamFavorite.getList());
         onAddonSelectorChanged();
 
         // unlock app
