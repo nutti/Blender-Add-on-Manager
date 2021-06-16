@@ -28,7 +28,7 @@ If you want to support other languages, please send me translated strings.
 
 This application has features as follows.
 
-* Search add-ons released on GitHub (more than 2,000 add-ons are avaliable)
+* Search add-ons released on GitHub (more than 2,000 add-ons are available)
 * Manage add-ons
   * Install add-on released on GitHub
   * Uninstall add-on which is already installed (only **External** support level)
